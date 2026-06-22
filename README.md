@@ -18,7 +18,7 @@
 ## 📖 Giới thiệu
 Dự án là một ứng dụng Web Single-Page (SPA) thuần túy (Vanilla JS), được xây dựng để hỗ trợ môn sinh Vovinam (đặc biệt là sinh viên Đại học FPT) ôn tập kiến thức võ đạo. Hệ thống mô phỏng trải nghiệm thi vấn đáp thực tế thông qua tính năng **đọc câu hỏi tự động** và **ghi âm/chấm điểm câu trả lời** bằng giọng nói.
 
-## 📸 Ảnh chụp màn hình (Screenshots)
+## 📸 Giao diện
 
 | Giao diện Trang chủ & Thống kê | Giao diện Luyện tập bằng Giọng nói |
 | :---: | :---: |
