@@ -1,43 +1,43 @@
 <div align="center">
-  <img src="Phu_hieu_vovinam.png" alt="Logo Vovinam" width="120" />
+  <img src="Phu_hieu_vovinam.png" alt="Vovinam Logo" width="120" />
 
-  # Hệ thống Vấn đáp Lý thuyết Vovinam Việt Võ Đạo 🥋
+  # Vovinam Theory Q&A System 🥋
 
-  *Ứng dụng Web luyện thi lý thuyết Vovinam bằng công nghệ nhận dạng giọng nói (Speech-to-Text) dành cho sinh viên.*
+  *A Web-based application designed to help Vovinam practitioners study and test their knowledge of martial arts theory using Speech-to-Text technology.*
 
   ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
   ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
   ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
   ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
-  [👉 Xem Live Demo tại đây](https://ruhua2305.github.io/ly-thuyet-vovinam/)
+  [👉 Visit the Live Demo](https://ruhua2305.github.io/ly-thuyet-vovinam/)
 </div>
 
 ---
 
-## 📖 Giới thiệu
-Dự án là một ứng dụng Web Single-Page (SPA) thuần túy (Vanilla JS), được xây dựng để hỗ trợ môn sinh Vovinam (đặc biệt là sinh viên Đại học FPT) ôn tập kiến thức võ đạo. Hệ thống mô phỏng trải nghiệm thi vấn đáp thực tế thông qua tính năng **đọc câu hỏi tự động** và **ghi âm/chấm điểm câu trả lời** bằng giọng nói.
+## 📖 Introduction
+This project is a standalone Single-Page Application (SPA) built with Vanilla JavaScript. It is designed to assist Vovinam practitioners (especially students at FPT University) in reviewing martial arts theory. The system simulates a real-world oral examination environment through automated text-to-speech questioning and voice-based answer recording and grading.
 
-## 📸 Giao diện
+## 📸 Screenshots
 
-| Giao diện Trang chủ & Thống kê | Giao diện Luyện tập bằng Giọng nói |
+| Dashboard & Statistics | Voice-based Practice Interface |
 | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/ruhua2305/ly-thuyet-vovinam/main/trang-chu.png" width="400"> | <img src="https://raw.githubusercontent.com/ruhua2305/ly-thuyet-vovinam/main/luyen-tap.png" width="400"> |
 
-## ✨ Tính năng nổi bật
-- 🎙️ **Tương tác bằng Giọng nói (Voice Interaction):** Tự động đọc câu hỏi (Text-to-Speech) và nhận diện câu trả lời qua Microphone (Speech-to-Text).
-- 🧠 **Chấm điểm thông minh (Keyword Matching):** Tự động phân tích, chuẩn hóa văn bản và so khớp từ khóa để tính điểm phần trăm (%).
-- 🎯 **4 Chế độ Luyện tập:**
-  - `Thi thử`: Chọn ngẫu nhiên 3 câu hỏi (cân bằng độ dài) có tính thời gian.
-  - `Học thuộc lòng`: Ôn luyện tuần tự toàn bộ ngân hàng câu hỏi.
-  - `Flashcard`: Thẻ ghi nhớ lật mặt nhanh, không cần sử dụng mic.
-  - `Ôn câu yếu`: Tự động gom các câu có điểm số dưới 50% để luyện lại.
-- 📊 **Theo dõi Tiến độ Local:** Lưu trữ điểm số an toàn ngay trên trình duyệt, không cần cơ sở dữ liệu. Hỗ trợ Xuất/Nhập (Export/Import) file `.json`.
-- ⚡ **Hoạt động Offline:** Giao diện SPA siêu nhẹ, không phụ thuộc vào framework backend (ngoại trừ tính năng nhận diện giọng nói cần kết nối internet của trình duyệt).
+## ✨ Key Features
+- 🎙️ **Voice Interaction:** Automatically reads questions (Text-to-Speech) and recognizes user answers via Microphone (Speech-to-Text).
+- 🧠 **Intelligent Grading (Keyword Matching):** Automatically analyzes, normalizes text, and matches keywords to calculate percentage scores (%).
+- 🎯 **4 Practice Modes:**
+  - `Mock Exam`: Selects 3 random questions (length-balanced) with a timer.
+  - `Study Mode`: Sequential review of the entire question bank.
+  - `Flashcard`: Quick flip-card mode for memorization without a microphone.
+  - `Weak Questions`: Automatically filters questions with <50% accuracy for targeted practice.
+- 📊 **Local Progress Tracking:** Securely stores scores directly in the browser; no database required. Supports data Import/Export via `.json` files.
+- ⚡ **Offline-Ready:** A lightweight SPA that runs entirely without backend dependencies.
 
-## 🛠 Cài đặt & Chạy dự án (Local Development)
-Dự án được viết hoàn toàn bằng HTML/CSS/JS thuần nên không cần cài đặt các môi trường phức tạp (như Node.js).
+## 🛠 Setup & Development
+This project is built using pure HTML, CSS, and JS. No complex build environments (like Node.js) are required.
 
-1. **Clone repository này về máy:**
+1. **Clone this repository:**
 ```bash
    git clone [https://github.com/ruhua2305/ly-thuyet-vovinam.git](https://github.com/ruhua2305/ly-thuyet-vovinam.git)
