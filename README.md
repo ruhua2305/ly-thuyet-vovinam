@@ -21,7 +21,7 @@ Dự án là một ứng dụng Web Single-Page (SPA) thuần túy (Vanilla JS),
 ## 📸 Ảnh chụp màn hình (Screenshots)
 *(Thay thế các link dưới đây bằng ảnh chụp màn hình thực tế của ứng dụng)*
 
-|<img src="<trang-chu.png>" width="400" alt="Màn hình chính"> | <img src="<luyen-tap.png>" width="400" alt="Màn hình luyện tập"> |
+|<img src="[<trang-chu.png>](https://github.com/ruhua2305/ly-thuyet-vovinam/blob/main/trang-chu.png)" width="400" alt="Màn hình chính"> | <img src="[<luyen-tap.png>](https://github.com/ruhua2305/ly-thuyet-vovinam/blob/main/luyen-tap.png)" width="400" alt="Màn hình luyện tập"> |
 |:---:|:---:|
 | *Giao diện Trang chủ & Thống kê* | *Giao diện Luyện tập bằng Giọng nói* |
 
