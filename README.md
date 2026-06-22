@@ -19,11 +19,10 @@
 Dự án là một ứng dụng Web Single-Page (SPA) thuần túy (Vanilla JS), được xây dựng để hỗ trợ môn sinh Vovinam (đặc biệt là sinh viên Đại học FPT) ôn tập kiến thức võ đạo. Hệ thống mô phỏng trải nghiệm thi vấn đáp thực tế thông qua tính năng **đọc câu hỏi tự động** và **ghi âm/chấm điểm câu trả lời** bằng giọng nói.
 
 ## 📸 Ảnh chụp màn hình (Screenshots)
-*(Thay thế các link dưới đây bằng ảnh chụp màn hình thực tế của ứng dụng)*
 
-|<img src="[<trang-chu.png>](https://github.com/ruhua2305/ly-thuyet-vovinam/blob/main/trang-chu.png)" width="400" alt="Màn hình chính"> | <img src="[<luyen-tap.png>](https://github.com/ruhua2305/ly-thuyet-vovinam/blob/main/luyen-tap.png)" width="400" alt="Màn hình luyện tập"> |
-|:---:|:---:|
-| *Giao diện Trang chủ & Thống kê* | *Giao diện Luyện tập bằng Giọng nói* |
+| Giao diện Trang chủ & Thống kê | Giao diện Luyện tập bằng Giọng nói |
+| :---: | :---: |
+| <img src="https://raw.githubusercontent.com/ruhua2305/ly-thuyet-vovinam/main/trang-chu.png" width="400"> | <img src="https://raw.githubusercontent.com/ruhua2305/ly-thuyet-vovinam/main/luyen-tap.png" width="400"> |
 
 ## ✨ Tính năng nổi bật
 - 🎙️ **Tương tác bằng Giọng nói (Voice Interaction):** Tự động đọc câu hỏi (Text-to-Speech) và nhận diện câu trả lời qua Microphone (Speech-to-Text).
@@ -40,5 +39,5 @@ Dự án là một ứng dụng Web Single-Page (SPA) thuần túy (Vanilla JS),
 Dự án được viết hoàn toàn bằng HTML/CSS/JS thuần nên không cần cài đặt các môi trường phức tạp (như Node.js).
 
 1. **Clone repository này về máy:**
-   ```bash
+```bash
    git clone [https://github.com/ruhua2305/ly-thuyet-vovinam.git](https://github.com/ruhua2305/ly-thuyet-vovinam.git)
