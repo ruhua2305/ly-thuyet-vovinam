@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hệ thống Vấn đáp Lý thuyết Vovinam Việt Võ Đạo</title>
+<style>
+/* ============================================================
+   BIẾN MÀU SẮC - Lấy từ màu sắc Võ phục Vovinam
+   Xanh lam dương (chủ đạo), Vàng (điểm nhấn), Đỏ (hành động)
+   ============================================================ */
+:root {
+  --blue-deep:    #0d3a7a;
+  --blue-mid:     #1a5cb8;
+  --blue-light:   #2e7ad4;
+  --blue-pale:    #daeaf8;
+  --yellow-gold:  #f5c518;
+  --yellow-light: #fff8d6;
+  --red-main:     #c0221b;
+  --red-dark:     #8b1a14;
+  --red-light:    #fde8e7;
+  --white:        #ffffff;
+  --gray-light:   #f0f4f8;
+  --gray-mid:     #b0bec5;
+  --gray-dark:    #455a64;
+  --text-main:    #1a2540;
+  --text-soft:    #5a6a80;
+  --shadow:       0 4px 20px rgba(13,58,122,0.15);
+  --radius:       12px;
+  --radius-sm:    8px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  background: linear-gradient(160deg, var(--blue-deep) 0%, #0a2850 40%, #061830 100%);
+  min-height: 100vh;
+  color: var(--text-main);
+}
+
+/* ============================================================
+   LAYOUT CHUNG
+   ============================================================ */
+.app-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   HEADER & PHÙ HIỆU
+   ============================================================ */
+.app-header {
+  text-align: center;
+  padding: 24px 16px 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  border: 1px solid rgba(245,197,24,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.app-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(245,197,24,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.phu-hieu-container {
+  margin-bottom: 12px;
+}
+.phu-hieu-img {
+  width: 90px;
+  height: auto;
+  filter: drop-shadow(0 4px 12px rgba(245,197,24,0.5));
+  transition: transform 0.3s ease;
+}
+.phu-hieu-img:hover { transform: scale(1.05); }
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--yellow-gold);
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.app-subtitle {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   CARD TRẮNG (dùng cho các panel nội dung)
+   ============================================================ */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--blue-deep);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title .icon { font-size: 1.2rem; }
+
+/* ============================================================
+   TIẾN TRÌNH HỌC (Thanh progress tổng quan)
+   ============================================================ */
+.progress-bar-outer {
+  height: 8px;
+  background: var(--blue-pale);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-mid), var(--yellow-gold));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.progress-label {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   BADGE THỐNG KÊ
+   ============================================================ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.stat-badge {
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.stat-badge.blue  { background: var(--blue-pale);   border-color: var(--blue-light);  }
+.stat-badge.gold  { background: var(--yellow-light); border-color: var(--yellow-gold); }
+.stat-badge.red   { background: var(--red-light);   border-color: var(--red-main);    }
+.stat-num {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--blue-deep);
+  display: block;
+}
+.stat-num.gold { color: #b8900a; }
+.stat-num.red  { color: var(--red-main); }
+.stat-lbl {
+  font-size: 0.72rem;
+  color: var(--text-soft);
+  display: block;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   NÚT BẤM
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 11px 18px;
+  transition: all 0.18s ease;
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue-mid), var(--blue-deep));
+  color: var(--white);
+  box-shadow: 0 3px 10px rgba(13,58,122,0.3);
+}
+.btn-primary:hover { background: linear-gradient(135deg, var(--blue-light), var(--blue-mid)); }
+.btn-gold {
+  background: linear-gradient(135deg, var(--yellow-gold), #e0a800);
+  color: var(--blue-deep);
+  box-shadow: 0 3px 10px rgba(245,197,24,0.3);
+}
+.btn-gold:hover { filter: brightness(1.08); }
+.btn-red {
+  background: linear-gradient(135deg, var(--red-main), var(--red-dark));
+  color: var(--white);
+  box-shadow: 0 3px 10px rgba(192,34,27,0.3);
+}
+.btn-red:hover { filter: brightness(1.1); }
+.btn-outline {
+  background: transparent;
+  color: var(--blue-mid);
+  border: 2px solid var(--blue-mid);
+}
+.btn-outline:hover { background: var(--blue-pale); }
+.btn-gray {
+  background: var(--gray-light);
+  color: var(--text-soft);
+  border: 1px solid var(--gray-mid);
+}
+.btn-gray:hover { background: #e0e6ec; }
+.btn-block { width: 100%; }
+.btn-sm { padding: 8px 14px; font-size: 0.82rem; }
+.btn-lg { padding: 14px 24px; font-size: 1rem; }
+
+/* ============================================================
+   CHỌN CẤP ĐỘ VÀ CHẾ ĐỘ
+   ============================================================ */
+.mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.mode-card {
+  border: 2px solid var(--blue-pale);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  background: var(--white);
+}
+.mode-card:hover {
+  border-color: var(--blue-mid);
+  background: var(--blue-pale);
+}
+.mode-card.selected {
+  border-color: var(--yellow-gold);
+  background: var(--yellow-light);
+  box-shadow: 0 0 0 3px rgba(245,197,24,0.2);
+}
+.mode-card .mode-icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+.mode-card .mode-name { font-size: 0.88rem; font-weight: 700; color: var(--blue-deep); }
+.mode-card .mode-desc { font-size: 0.75rem; color: var(--text-soft); margin-top: 3px; }
+
+.level-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.level-tab {
+  border: 2px solid var(--blue-pale);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--white);
+  transition: all 0.2s ease;
+}
+.level-tab:hover { border-color: var(--blue-light); background: var(--blue-pale); }
+.level-tab.selected { border-color: var(--blue-mid); background: var(--blue-deep); color: var(--white); }
+.level-tab .level-name { font-size: 0.88rem; font-weight: 700; }
+.level-tab .level-range { font-size: 0.72rem; color: var(--gray-mid); }
+.level-tab.selected .level-range { color: rgba(255,255,255,0.7); }
+
+/* ============================================================
+   KHU VỰC LUYỆN TẬP (MÀN HÌNH THI / HỌC)
+   ============================================================ */
+.practice-screen { display: none; }
+.practice-screen.active { display: block; }
+
+.question-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.question-number {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  background: var(--blue-pale);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.question-level-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.badge-vo1 { background: #e3f2fd; color: #0d47a1; }
+.badge-vo2 { background: #fff3e0; color: #e65100; }
+.badge-vo3 { background: #fce4ec; color: #880e4f; }
+
+.question-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--blue-deep);
+  line-height: 1.55;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: var(--blue-pale);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--blue-mid);
+}
+
+/* Đồng hồ đếm ngược */
+.timer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.timer-display {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--blue-deep);
+  min-width: 50px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.timer-display.warning { color: var(--red-main); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+.timer-bar-outer { flex: 1; height: 6px; background: var(--blue-pale); border-radius: 3px; overflow: hidden; }
+.timer-bar-inner { height: 100%; background: var(--blue-mid); transition: width 1s linear; border-radius: 3px; }
+.timer-bar-inner.warning { background: var(--red-main); }
+
+/* Khu vực ghi âm giọng nói */
+.mic-area {
+  text-align: center;
+  padding: 20px;
+  border: 2px dashed var(--blue-mid);
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+  background: var(--blue-pale);
+  transition: all 0.3s ease;
+}
+.mic-area.listening {
+  border-color: var(--red-main);
+  background: var(--red-light);
+  animation: mic-glow 1.5s infinite;
+}
+@keyframes mic-glow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(192,34,27,0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(192,34,27,0); }
+}
+.mic-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 6px;
+  transition: transform 0.2s;
+}
+.mic-area.listening .mic-icon { animation: mic-bounce 0.5s infinite alternate; }
+@keyframes mic-bounce { from { transform: scale(1); } to { transform: scale(1.15); } }
+.mic-status { font-size: 0.85rem; color: var(--text-soft); }
+.mic-transcript {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: var(--blue-deep);
+  font-style: italic;
+  min-height: 20px;
+  word-break: break-word;
+}
+
+/* Kết quả chấm điểm 1 câu */
+.score-result {
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 14px;
+  display: none;
+}
+.score-result.show { display: block; }
+.score-result.pass { background: #e8f5e9; border: 1px solid #66bb6a; }
+.score-result.mid  { background: var(--yellow-light); border: 1px solid var(--yellow-gold); }
+.score-result.fail { background: var(--red-light); border: 1px solid var(--red-main); }
+.score-percent {
+  font-size: 1.8rem;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 4px;
+}
+.score-result.pass .score-percent { color: #2e7d32; }
+.score-result.mid  .score-percent { color: #8b6900; }
+.score-result.fail .score-percent { color: var(--red-dark); }
+.score-keywords { font-size: 0.8rem; color: var(--text-soft); margin-top: 6px; }
+.kw-hit  { color: #2e7d32; font-weight: 600; }
+.kw-miss { color: var(--red-main); text-decoration: line-through; }
+
+/* Đáp án mẫu */
+.sample-answer {
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--text-main);
+  display: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.sample-answer.show { display: block; }
+
+/* Hàng nút điều khiển */
+.control-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.control-row .btn { flex: 1; min-width: 100px; }
+
+/* ============================================================
+   FLASHCARD
+   ============================================================ */
+.flashcard-box {
+  perspective: 1000px;
+  margin-bottom: 16px;
+}
+.flashcard-inner {
+  position: relative;
+  min-height: 180px;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.flashcard-inner.flipped { transform: rotateY(180deg); }
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--radius-sm);
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 180px;
+}
+.flashcard-front {
+  background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));
+  color: var(--white);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+.flashcard-back {
+  background: var(--yellow-light);
+  color: var(--blue-deep);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  transform: rotateY(180deg);
+  text-align: left;
+  align-items: flex-start;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+/* ============================================================
+   KẾT QUẢ CUỐI BÀI
+   ============================================================ */
+.result-screen { display: none; }
+.result-screen.active { display: block; }
+.result-badge {
+  text-align: center;
+  padding: 24px;
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+}
+.result-badge.gold-badge  { background: linear-gradient(135deg, #fff8d6, #fde68a); border: 2px solid var(--yellow-gold); }
+.result-badge.blue-badge  { background: linear-gradient(135deg, var(--blue-pale), #bdd8f5); border: 2px solid var(--blue-mid); }
+.result-badge.red-badge   { background: linear-gradient(135deg, var(--red-light), #ffcdd2); border: 2px solid var(--red-main); }
+.result-icon { font-size: 3rem; display: block; margin-bottom: 8px; }
+.result-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 4px; }
+.result-avg { font-size: 2.2rem; font-weight: 900; margin: 8px 0; }
+.gold-badge .result-avg, .gold-badge .result-title { color: #8b6900; }
+.blue-badge .result-avg, .blue-badge .result-title { color: var(--blue-deep); }
+.red-badge  .result-avg, .red-badge  .result-title { color: var(--red-dark); }
+
+.weak-list { list-style: none; }
+.weak-item {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--red-light);
+  border-left: 4px solid var(--red-main);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.weak-item:hover { background: #ffd0ce; }
+.weak-score { font-weight: 800; color: var(--red-dark); min-width: 42px; font-size: 0.88rem; }
+.weak-q { font-size: 0.83rem; color: var(--text-main); flex: 1; }
+
+/* ============================================================
+   TTS VÀ TIMER CONTROLS
+   ============================================================ */
+.util-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+.util-label { font-size: 0.78rem; color: var(--text-soft); font-weight: 600; }
+.speed-select {
+  font-size: 0.82rem;
+  padding: 5px 8px;
+  border: 1px solid var(--gray-mid);
+  border-radius: 6px;
+  background: var(--white);
+  cursor: pointer;
+  color: var(--text-main);
+}
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  cursor: pointer;
+  user-select: none;
+}
+.toggle-box {
+  width: 36px;
+  height: 20px;
+  background: var(--gray-mid);
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.3s;
+}
+.toggle-box.on { background: var(--blue-mid); }
+.toggle-knob {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  background: var(--white);
+  border-radius: 50%;
+  transition: left 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-box.on .toggle-knob { left: 18px; }
+
+/* ============================================================
+   TOAST THÔNG BÁO
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--blue-deep);
+  color: var(--white);
+  padding: 11px 22px;
+  border-radius: 24px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+  z-index: 9999;
+  max-width: 320px;
+  text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ============================================================
+   RESPONSIVE MOBILE
+   ============================================================ */
+@media (max-width: 480px) {
+  .app-title { font-size: 1.2rem; }
+  .mode-grid { grid-template-columns: 1fr; }
+  .control-row .btn { flex: unset; width: 100%; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   TRẠNG THÁI ẨN / HIỆN CÁC MÀN HÌNH
+   ============================================================ */
+#screen-home     { display: block; }
+#screen-practice { display: none; }
+#screen-result   { display: none; }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ======================================================
+       HEADER: Phù hiệu + Tiêu đề
+  ====================================================== -->
+  <header class="app-header">
+    <div class="phu-hieu-container">
+      <!-- Đặt file Phu_hieu_vovinam.png cùng thư mục với file HTML này -->
+      <img src="Phu_hieu_vovinam.png"
+           alt="Phù hiệu Vovinam Việt Võ Đạo"
+           class="phu-hieu-img"
+           onerror="this.style.display='none'; document.getElementById('phu-hieu-fallback').style.display='block'">
+      <!-- Dự phòng nếu không tìm thấy ảnh -->
+      <div id="phu-hieu-fallback" style="display:none; font-size:3rem;">🥋</div>
+    </div>
+    <h1 class="app-title">Hệ thống Vấn đáp Lý thuyết<br>Vovinam Việt Võ Đạo</h1>
+    <p class="app-subtitle">Trường Đại học FPT · Bộ môn Giáo dục Thể chất · 50 câu hỏi – 3 kỳ thi</p>
+  </header>
+
+  <!-- ======================================================
+       MÀN HÌNH CHÍNH (Home)
+  ====================================================== -->
+  <div id="screen-home">
+
+    <!-- Thanh tiến trình tổng quan -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> Tiến độ học tập</div>
+      <div class="stats-row">
+        <div class="stat-badge blue">
+          <span class="stat-num" id="stat-done">0</span>
+          <span class="stat-lbl">Câu đã làm</span>
+        </div>
+        <div class="stat-badge gold">
+          <span class="stat-num gold" id="stat-avg">—</span>
+          <span class="stat-lbl">Điểm TB</span>
+        </div>
+        <div class="stat-badge red">
+          <span class="stat-num red" id="stat-weak">0</span>
+          <span class="stat-lbl">Câu yếu (&lt;50%)</span>
+        </div>
+      </div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progress-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-label">
+        <span id="progress-text">Chưa bắt đầu</span>
+        <span id="progress-pct">0 / 50</span>
+      </div>
+    </div>
+
+    <!-- Chọn kỳ thi -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span> Chọn kỳ thi</div>
+      <div class="level-tabs">
+        <div class="level-tab selected" data-level="1" onclick="selectLevel(1)">
+          <div class="level-name">⚡ Võ 1</div>
+          <div class="level-range">Câu 1–10</div>
+        </div>
+        <div class="level-tab" data-level="2" onclick="selectLevel(2)">
+          <div class="level-name">🔥 Võ 2</div>
+          <div class="level-range">Câu 11–30</div>
+        </div>
+        <div class="level-tab" data-level="3" onclick="selectLevel(3)">
+          <div class="level-name">💎 Võ 3</div>
+          <div class="level-range">Câu 31–50</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chọn chế độ luyện tập -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🏋️</span> Chọn chế độ luyện tập</div>
+      <div class="mode-grid">
+        <div class="mode-card selected" data-mode="exam" onclick="selectMode('exam')">
+          <span class="mode-icon">🎲</span>
+          <div class="mode-name">Thi thử (Bốc thăm)</div>
+          <div class="mode-desc">3 câu ngẫu nhiên như thi thật</div>
+        </div>
+        <div class="mode-card" data-mode="sequential" onclick="selectMode('sequential')">
+          <span class="mode-icon">📚</span>
+          <div class="mode-name">Học thuộc lòng</div>
+          <div class="mode-desc">Hỏi tuần tự, đủ tất cả câu</div>
+        </div>
+        <div class="mode-card" data-mode="flashcard" onclick="selectMode('flashcard')">
+          <span class="mode-icon">🃏</span>
+          <div class="mode-name">Flashcard nhanh</div>
+          <div class="mode-desc">Tự đánh giá, không cần mic</div>
+        </div>
+        <div class="mode-card" data-mode="weak" onclick="selectMode('weak')">
+          <span class="mode-icon">💪</span>
+          <div class="mode-name">Ôn câu yếu</div>
+          <div class="mode-desc">Luyện các câu dưới 50%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tiện ích TTS và đồng hồ -->
+    <div class="card">
+      <div class="card-title"><span class="icon">⚙️</span> Cài đặt trước khi luyện</div>
+      <div class="util-bar">
+        <span class="util-label">🔊 Tốc độ đọc câu hỏi:</span>
+        <select class="speed-select" id="tts-speed-select">
+          <option value="0.7">Chậm</option>
+          <option value="1.0" selected>Vừa</option>
+          <option value="1.4">Nhanh</option>
+        </select>
+        <div class="toggle-switch" onclick="toggleTimer()">
+          <div class="toggle-box on" id="timer-toggle-box"><div class="toggle-knob"></div></div>
+          <span id="timer-toggle-lbl">Đồng hồ 30s: Bật</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nút bắt đầu -->
+    <button class="btn btn-gold btn-block btn-lg" onclick="startSession()" style="margin-bottom:14px;">
+      🚀 Bắt đầu luyện tập
+    </button>
+
+    <!-- Sao lưu và khôi phục tiến trình -->
+    <div class="card">
+      <div class="card-title"><span class="icon">💾</span> Quản lý tiến độ</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-outline btn-sm" onclick="exportProgress()" style="flex:1;">
+          ⬇️ Xuất kết quả (.json)
+        </button>
+        <label class="btn btn-outline btn-sm" style="flex:1; cursor:pointer;">
+          ⬆️ Nhập tiến trình
+          <input type="file" accept=".json" style="display:none" onchange="importProgress(event)">
+        </label>
+        <button class="btn btn-gray btn-sm" onclick="resetAllProgress()" style="flex:1;">
+          🗑️ Xóa toàn bộ
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end #screen-home -->
+
+  <!-- ======================================================
+       MÀN HÌNH LUYỆN TẬP
+  ====================================================== -->
+  <div id="screen-practice">
+
+    <!-- Thanh tiện ích TTS khi đang luyện -->
+    <div class="util-bar" id="practice-util-bar">
+      <span class="util-label">🔊</span>
+      <select class="speed-select" id="tts-speed-practice">
+        <option value="0.7">Chậm</option>
+        <option value="1.0" selected>Vừa</option>
+        <option value="1.4">Nhanh</option>
+      </select>
+      <button class="btn btn-gray btn-sm" onclick="speakCurrentQuestion()">▶ Đọc câu hỏi</button>
+      <button class="btn btn-gray btn-sm" onclick="stopTTS()">⏹ Dừng</button>
+      <div style="margin-left:auto; font-size:0.8rem; color:var(--text-soft);" id="session-counter">—</div>
+    </div>
+
+    <!-- Đồng hồ đếm ngược -->
+    <div class="timer-row" id="timer-row" style="display:flex;">
+      <span>⏱</span>
+      <div class="timer-display" id="timer-display">30</div>
+      <div class="timer-bar-outer"><div class="timer-bar-inner" id="timer-bar" style="width:100%"></div></div>
+    </div>
+
+    <!-- Card câu hỏi – chế độ có mic (Thi thử / Học thuộc lòng / Ôn câu yếu) -->
+    <div class="card" id="voice-mode-card">
+      <div class="question-header">
+        <span class="question-number" id="q-number">Câu 1 / 3</span>
+        <span class="question-level-badge badge-vo1" id="q-level-badge">Võ 1</span>
+      </div>
+      <div class="question-text" id="q-text">Đang tải câu hỏi...</div>
+
+      <!-- Khu vực mic -->
+      <div class="mic-area" id="mic-area">
+        <span class="mic-icon" id="mic-icon">🎙️</span>
+        <div class="mic-status" id="mic-status">Nhấn nút bên dưới để bắt đầu trả lời</div>
+        <div class="mic-transcript" id="mic-transcript"></div>
+      </div>
+
+      <!-- Kết quả chấm điểm -->
+      <div class="score-result" id="score-result">
+        <span class="score-percent" id="score-percent">0%</span>
+        <div id="score-feedback"></div>
+        <div class="score-keywords" id="score-keywords"></div>
+      </div>
+
+      <!-- Đáp án mẫu -->
+      <div>
+        <button class="btn btn-outline btn-sm btn-block" id="btn-show-answer"
+                onclick="toggleSampleAnswer()" style="margin-bottom:8px;">
+          📖 Xem đáp án mẫu
+        </button>
+        <div class="sample-answer" id="sample-answer"></div>
+      </div>
+
+      <!-- Nút điều khiển -->
+      <div class="control-row" style="margin-top:12px;">
+        <button class="btn btn-red" id="btn-mic" onclick="toggleMic()">🎙️ Ghi âm</button>
+        <button class="btn btn-gray" onclick="skipQuestion()">⏭ Bỏ qua</button>
+        <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()" disabled>▶ Câu tiếp</button>
+      </div>
+    </div>
+
+    <!-- Card câu hỏi – chế độ Flashcard -->
+    <div id="flashcard-mode-card" style="display:none;">
+      <div class="card">
+        <div class="question-header">
+          <span class="question-number" id="fc-number">Câu 1 / 10</span>
+          <span class="question-level-badge badge-vo1" id="fc-level-badge">Võ 1</span>
+        </div>
+        <div class="flashcard-box">
+          <div class="flashcard-inner" id="flashcard-inner">
+            <div class="flashcard-face flashcard-front" id="fc-front"></div>
+            <div class="flashcard-face flashcard-back" id="fc-back"></div>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-block" onclick="flipFlashcard()" style="margin-bottom:12px;">
+          🔄 Xem / Ẩn đáp án
+        </button>
+        <div class="control-row">
+          <button class="btn btn-gray" onclick="fcMarkUnknown()">❌ Chưa thuộc</button>
+          <button class="btn btn-gold" onclick="skipQuestion()">⏭ Bỏ qua</button>
+          <button class="btn btn-primary" onclick="fcMarkKnown()">✅ Đã thuộc</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nút về trang chủ -->
+    <button class="btn btn-outline btn-block" onclick="goHome()" style="margin-top:4px;">
+      🏠 Về trang chủ
+    </button>
+
+  </div><!-- end #screen-practice -->
+
+  <!-- ======================================================
+       MÀN HÌNH KẾT QUẢ
+  ====================================================== -->
+  <div id="screen-result">
+
+    <div class="result-badge" id="result-badge">
+      <span class="result-icon" id="result-icon">🏅</span>
+      <div class="result-title" id="result-title">Kết quả bài thi</div>
+      <div class="result-avg" id="result-avg">0%</div>
+      <div id="result-subtitle" style="font-size:0.88rem; margin-top:4px;"></div>
+    </div>
+
+    <!-- Chi tiết từng câu -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span> Chi tiết kết quả</div>
+      <div id="result-detail"></div>
+    </div>
+
+    <!-- Câu yếu cần ôn -->
+    <div class="card" id="weak-card" style="display:none;">
+      <div class="card-title"><span class="icon">⚠️</span> Câu cần ôn thêm (dưới 50%)</div>
+      <ul class="weak-list" id="weak-list"></ul>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;">
+      <button class="btn btn-gold" onclick="startSession()" style="flex:1;">
+        🔄 Làm lại kỳ này
+      </button>
+      <button class="btn btn-outline" onclick="goHome()" style="flex:1;">
+        🏠 Trang chủ
+      </button>
+    </div>
+
+  </div><!-- end #screen-result -->
+
+</div><!-- end .app-wrapper -->
+
+<!-- Toast thông báo -->
+<div class="toast" id="toast"></div>
+
+<!-- ============================================================
+     JAVASCRIPT – Toàn bộ logic ứng dụng
+     ============================================================ -->
+<script>
+'use strict';
+
+// ============================================================
+// 1. DỮ LIỆU CÂU HỎI CHUẨN
+//    Mỗi câu gồm: id, ky (1/2/3), cau (nội dung câu hỏi),
+//    dapAn (đáp án đầy đủ để hiển thị),
+//    tuKhoa (mảng các từ/cụm từ quan trọng để chấm điểm).
+//
+//    LƯU Ý NGƯỜI BỔ SUNG:
+//    - tuKhoa phải là những cụm từ QUAN TRỌNG, KHÔNG THỂ THIẾU
+//    - Tránh từ quá chung chung (như "là", "và", "có")
+//    - Câu trả lời dài nên có nhiều từ khóa hơn
+//    - isDai = true cho các câu có đáp án dài (ưu tiên trong Thi thử)
+// ============================================================
+const CHUONG_TRINH = [
+
+  // ============================================================
+  // KỲ VÕ 1 – Câu 1 đến 10: Tri thức cơ bản môn Vovinam
+  // ============================================================
+
+  {
+    id: 1, ky: 1,
+    cau: 'Vovinam là gì? Vì sao còn gọi Vovinam là Việt Võ Đạo?',
+    dapAn: 'Vovinam là một môn võ của người Việt Nam, được sáng lập bởi cố võ sư Sáng tổ Nguyễn Lộc vào năm 1938 tại Hà Nội. Vovinam là viết tắt của Võ Việt Nam, là chữ quốc tế hóa của từ Võ thuật – Võ đạo Việt Nam.\n\nGọi Vovinam là Việt Võ Đạo vì nội dung Vovinam có 2 phần: Việt Võ Thuật (Võ thuật Việt Nam) và Việt Võ Đạo (Võ đạo Việt Nam). Vovinam là nguồn gốc còn Việt Võ Đạo là kết quả. Gọi Vovinam hay Việt Võ Đạo đều được nhưng gọi đầy đủ là Vovinam - Việt Võ Đạo.',
+    // Từ khóa chấm điểm – có thể bổ sung thêm tại đây
+    tuKhoa: ['nguyen loc', 'sang to', '1938', 'ha noi', 'vo viet nam', 'viet vo thuat', 'viet vo dao', 'nguon goc', 'ket qua'],
+    isDai: false
+  },
+
+  {
+    id: 2, ky: 1,
+    cau: 'Trình bày ý nghĩa của động tác nghiêm lễ trong Vovinam?',
+    dapAn: 'Khi nghiêm lễ, Môn sinh Vovinam đặt tay phải lên trái tim có ý nghĩa: bàn tay thép đặt trên trái tim từ ái, đức DŨNG đi đôi với lòng NHÂN, võ THUẬT gắn liền với võ ĐẠO.\n\nViệt Võ Đạo sinh chỉ được dùng võ để cảnh cáo, cảm hóa người chứ không để trừng phạt, trả thù người.',
+    tuKhoa: ['tay phai', 'trai tim', 'ban tay thep', 'tu ai', 'dung', 'nhan', 'thuat', 'dao', 'cam hoa', 'khong tru phat'],
+    isDai: false
+  },
+
+  {
+    id: 3, ky: 1,
+    cau: 'Nêu 3 điều sơ khởi về kỷ luật tại võ đường, lớp học Vovinam?',
+    dapAn: 'Môn sinh Vovinam cần ghi nhớ 3 điều sơ khởi về kỷ luật tại võ đường:\n1. Đi tập đều đặn đúng giờ. Đến trễ phải báo lý do với Võ Sư hoặc Huấn Luyện Viên phụ trách. Nghỉ tập phải xin phép.\n2. Trong giờ tập phải chăm chỉ luyện tập, hòa nhã và giúp đỡ bạn đồng môn.\n3. Gặp người trên (võ sư, huấn luyện viên) phải Nghiêm Lễ. Khi đến võ đường và trước khi ra về phải chào di ảnh cố võ sư sáng tổ môn phái.',
+    tuKhoa: ['deu dat dung gio', 'bao ly do', 'xin phep', 'cham chi', 'hoa nha', 'dong mon', 'nghiem le', 'di anh', 'sang to'],
+    isDai: false
+  },
+
+  {
+    id: 4, ky: 1,
+    cau: 'Nêu quan niệm học võ của môn sinh Vovinam?',
+    dapAn: 'Quan niệm thông thường của người tập võ là để tự vệ. Việt Võ Đạo sinh tập võ cho thân thể khỏe mạnh, trí tuệ minh mẫn, tâm hồn cao thượng để học tập, lao động, bảo vệ sự sống, đấu tranh cho lẽ phải và phục vụ tổ quốc.',
+    tuKhoa: ['than the khoe manh', 'tri tue minh man', 'tam hon cao thuong', 'bao ve su song', 'dau tranh le phai', 'phuc vu to quoc'],
+    isDai: false
+  },
+
+  {
+    id: 5, ky: 1,
+    cau: 'Nêu quan niệm dụng võ của môn phái Vovinam?',
+    dapAn: 'Quan niệm dụng võ của môn phái Vovinam - Việt Võ Đạo có 4 điểm:\n1. Không thượng đài\n2. Không gây lộn, không thử võ với người hoặc môn phái khác.\n3. Để tự vệ\n4. Đấu tranh cho lẽ phải.',
+    tuKhoa: ['khong thuong dai', 'khong gay lon', 'khong thu vo', 'tu ve', 'dau tranh le phai'],
+    isDai: false
+  },
+
+  {
+    id: 6, ky: 1,
+    cau: 'Môn sinh Vovinam được dùng võ khi nào?',
+    dapAn: 'Môn sinh Vovinam được phép sử dụng võ khi danh dự bị xúc phạm, quyền sống bị đe dọa và bênh vực lẽ phải.',
+    tuKhoa: ['danh du bi xuc pham', 'quyen song bi de doa', 'benh vuc le phai'],
+    isDai: false
+  },
+
+  {
+    id: 7, ky: 1,
+    cau: 'Nêu sự khác biệt giữa võ sinh và môn sinh?',
+    dapAn: 'Võ sinh là những người mới tập võ, chưa làm lễ nhập môn. Môn sinh là những người đã qua một thời gian rèn luyện võ thuật (6 tháng) đã làm lễ nhập môn, đang tiến dần đến con đường võ đạo.',
+    tuKhoa: ['moi tap vo', 'chua lam le nhap mon', 'sau thang', 'da lam le nhap mon', 'vo dao'],
+    isDai: false
+  },
+
+  {
+    id: 8, ky: 1,
+    cau: 'Trong môn phái Vovinam – Việt Võ Đạo các môn sinh đối xử với nhau thế nào?',
+    dapAn: 'Trong đại gia đình Việt Võ Đạo, các môn đồ phải thương yêu, kính trọng, nhường nhịn và giúp nhau. Các điều đó đan kết lại thành kỷ luật môn phái giúp các môn đồ đoàn kết chặt chẽ nêu cao danh dự môn phái và phấn đấu tu dưỡng liên tục để trở thành con người toàn diện.',
+    tuKhoa: ['thuong yeu', 'kinh trong', 'nhuong nhin', 'giup nhau', 'ky luat', 'doan ket', 'danh du', 'toan dien'],
+    isDai: false
+  },
+
+  {
+    id: 9, ky: 1,
+    cau: 'Môn phái Vovinam – Việt Võ Đạo có mấy màu đai? Ý nghĩa các màu đai?',
+    dapAn: 'Vovinam - Việt Võ Đạo có 4 màu đai: Xanh, Vàng, Đỏ, Trắng.\n\n1. XANH: Tượng trưng cho màu hi vọng và biển cả. Với ý nghĩa người võ sinh đang nuôi hi vọng tiến sâu vào ngành võ thuật và tu dưỡng tinh thần võ đạo.\n\n2. VÀNG: Tượng trưng cho màu vương đạo của Á đông. Với ý nghĩa võ thuật và tinh thần võ đạo đã bắt đầu ngấm vào da thịt và tâm hồn của người môn sinh.\n\n3. ĐỎ: Tượng trưng cho màu máu, màu của lửa sống hào hùng kiên quyết, với ý nghĩa võ thuật đã ngấm vào máu huyết, đang lưu thông trong cơ thể.\n\n4. TRẮNG: Tượng trưng cho màu của xương, màu của tinh khiết. Với ý nghĩa võ thuật và tinh thần võ đạo đã ngấm sâu vào xương tủy, biến căn cốt con người biểu trưng cho tinh hoa môn phái.',
+    tuKhoa: ['4 mau', 'xanh', 'vang', 'do', 'trang', 'hi vong', 'bien ca', 'vuong dao', 'a dong', 'mau mau', 'lua song', 'xuong tuy', 'tinh hoa'],
+    isDai: true
+  },
+
+  {
+    id: 10, ky: 1,
+    cau: 'Trình bày hệ thống đẳng cấp của môn phái Vovinam – Việt Võ Đạo?',
+    dapAn: 'Hệ thống đẳng cấp Vovinam – Việt Võ Đạo:\n\n1. TỰ VỆ NHẬP MÔN: Có 2 cấp, mỗi cấp tập 3 tháng. Danh xưng: Võ sinh.\n   - Tự vệ VVĐ: Đai xanh da trời\n   - Nhập môn VVĐ: Đai xanh dương đậm\n\n2. LAM ĐAI: Đai xanh dương đậm có gạch vàng, 3 cấp, mỗi cấp 6 tháng. Danh xưng: Môn sinh.\n\n3. HOÀNG ĐAI: 4 cấp\n   - Hoàng đai trơn: Đai vàng trơn, 2 năm. Danh xưng: Hướng dẫn viên.\n   - Hoàng đai I: Đai vàng 1 vạch đỏ, 2 năm. Danh xưng: Huấn luyện viên.\n   - Hoàng đai II: Đai vàng 2 vạch đỏ, 3 năm. Danh xưng: HLV cao cấp.\n   - Hoàng đai III: Đai vàng 3 vạch đỏ, 4 năm. Danh xưng: Võ sư trợ huấn.\n\n4. CHUẨN HỒNG ĐAI: Đai đỏ viền vàng, 5 năm. Danh xưng: Võ sư chuẩn cao đẳng.\n\n5. HỒNG ĐAI: Đai đỏ vạch trắng, 6 cấp, mỗi cấp 6 năm. Danh xưng: Võ sư cao đẳng.\n\n6. BẠCH ĐAI:\n   - Bạch đai thượng đẳng: Đai trắng có chỉ 3 màu Xanh–Vàng–Đỏ. Danh xưng: Võ sư chưởng môn.\n   - Bạch đai chưởng quản: Đai trắng có chỉ 3 màu ở tâm và vòng tròn âm dương 2 đầu. Danh xưng: Võ sư chánh chưởng quản.',
+    tuKhoa: ['tu ve nhap mon', 'lam dai', 'hoang dai', 'chuan hong dai', 'hong dai', 'bach dai', 'mon sinh', 'vo sinh', 'vo su', 'chuong mon', 'chanh chuong quan', 'am duong'],
+    isDai: true
+  },
+
+  // ============================================================
+  // KỲ VÕ 2 – Câu 11 đến 30
+  // Phù hiệu / Kỳ hiệu, Lịch sử các Võ sư, 10 Điều tâm niệm 1-4
+  // ============================================================
+
+  {
+    id: 11, ky: 2,
+    cau: 'Nêu ý nghĩa màu sắc và hình nét của phù hiệu (logo) và kỳ hiệu (cờ) Vovinam Việt Võ Đạo?',
+    dapAn: 'VỀ MÀU SẮC: Phù hiệu và kỳ hiệu Việt Võ Đạo có 4 màu:\n1. Xanh: nói về nguyên tố âm (âm tố), tượng trưng biển cả và hi vọng.\n2. Đỏ: nguyên tố dương (dương tố), tượng trưng cho lửa sống, sự đấu tranh hào hùng, kiên quyết.\n3. Vàng: màu của sự vinh quang hiển hách.\n4. Trắng: màu của thanh khiết chân tịnh, cao cả và thâm viễn tuyệt vời.\n\nVỀ HÌNH NÉT: Phù hiệu nền vàng, nửa trên vuông, nửa dưới hình tròn ghép lại tượng trưng cho nguyên lý Cương Nhu phối triển của Việt Võ Đạo biểu thị sự toàn chân, toàn thiện.\n1. Vòng tròn nhỏ xanh đỏ ở trong biểu thị cho âm và dương, vạch chữ S ở giữa bao hàm ý nghĩa tương giao, tương sinh và thường dịch trong vũ trụ.\n2. Vòng tròn lớn bao quanh vòng tròn nhỏ trắng biểu tượng cho "đạo thể" với nhiệm vụ phối hợp, điều hòa, khắc chế, bao dung.',
+    tuKhoa: ['am to', 'duong to', 'bien ca', 'lua song', 'vinh quang', 'thanh khiet', 'cuong nhu phoi trien', 'toan chan toan thien', 'vong tron am duong', 'chu S', 'tuong giao tuong sinh', 'dao the'],
+    isDai: true
+  },
+
+  {
+    id: 12, ky: 2,
+    cau: 'Giới thiệu sơ lược về cố võ sư Sáng tổ Nguyễn Lộc?',
+    dapAn: 'Họ tên: Cố võ sư Sáng tổ Nguyễn Lộc\nSinh ngày 08 tháng 4 năm Nhâm Tý (24/05/1912).\nNơi sinh: Làng Hữu Bằng, huyện Thạch Thất, tỉnh Sơn Tây cũ (nay là Hà Nội).\nQua đời ngày mồng 4 tháng 4 năm Canh Tý (29/4/1960) tại Sài Gòn (Tp. Hồ Chí Minh).\nDi cốt của thầy đang được bảo quản tại số 31 đường Sư Vạn Hạnh, Quận 10, TP HCM.',
+    tuKhoa: ['nguyen loc', '1912', 'huu bang', 'thach that', 'son tay', '1960', 'su van hanh', 'quan 10'],
+    isDai: false
+  },
+
+  {
+    id: 13, ky: 2,
+    cau: 'Cố võ sư Sáng tổ hoàn thành việc nghiên cứu Vovinam vào năm nào? Cuộc biểu diễn Vovinam đầu tiên được tổ chức tại đâu?',
+    dapAn: 'Cố võ sư Sáng tổ Nguyễn Lộc hoàn thành cuộc nghiên cứu Vovinam năm 1938.\nCuộc biểu diễn Vovinam đầu tiên ra mắt công chúng được tổ chức tại nhà hát lớn Hà Nội vào mùa Thu năm 1939.',
+    tuKhoa: ['1938', 'nha hat lon', 'ha noi', '1939', 'mua thu'],
+    isDai: false
+  },
+
+  {
+    id: 14, ky: 2,
+    cau: 'Lớp dạy Vovinam công khai đầu tiên được tổ chức tại đâu, năm bao nhiêu? Hiện nay Vovinam đang có mặt ở bao nhiêu quốc gia?',
+    dapAn: 'Lớp dạy Vovinam công khai đầu tiên được khai giảng tại trường Sư Phạm (École Normal) đường Cửa Bắc, Hà Nội vào mùa xuân năm 1940.\nMôn võ Vovinam Việt Võ Đạo đã phát triển ở hơn 70 quốc gia và vùng lãnh thổ trên thế giới.',
+    tuKhoa: ['su pham', 'ecole normal', 'cua bac', 'ha noi', '1940', 'mua xuan', '70 quoc gia'],
+    isDai: false
+  },
+
+  {
+    id: 15, ky: 2,
+    cau: 'Hãy nêu sơ lược hiểu biết về cố võ sư Chưởng môn Lê Sáng?',
+    dapAn: 'Trước khi qua đời, cố Võ sư Sáng tổ Nguyễn Lộc giao quyền lãnh đạo và phát triển môn phái lại cho Võ sư Lê Sáng.\nVõ sư Lê Sáng là Chưởng môn của môn phái Vovinam – Việt Võ Đạo từ năm 1960 – 2010. Ông sinh năm 1920 tại Hà Nội và mất ngày 27/09/2010 tại TP.HCM.\nDi cốt của thầy hiện được lưu giữ tại Tổ đường môn phái – 31 Đường Sư Vạn Hạnh, TP.HCM.\nDưới sự lãnh đạo của Võ sư Chưởng môn Lê Sáng, trong suốt 50 năm, Vovinam – Việt Võ Đạo đã phát triển vượt bậc và mở rộng đến nhiều nơi trên thế giới.',
+    tuKhoa: ['le sang', 'chuong mon', '1960', '2010', '1920', 'su van hanh', '50 nam'],
+    isDai: false
+  },
+
+  {
+    id: 16, ky: 2,
+    cau: 'Hãy nêu sơ lược hiểu biết về cố võ sư Chánh chưởng quản Nguyễn Văn Chiếu?',
+    dapAn: 'Năm 2010, trước khi cố võ sư Chưởng môn Lê Sáng qua đời, thầy không lập chưởng môn nữa mà lập ra Hội đồng võ sư Chưởng quản để điều hành và phát triển môn phái.\nVõ sư chánh chưởng quản đầu tiên là võ sư Nguyễn Văn Chiếu.\nVõ sư Nguyễn Văn Chiếu sinh năm 1949 và mất năm 2020 tại TP.HCM, quê gốc ở huyện Long Hồ - tỉnh Vĩnh Long.\nVõ sư Nguyễn Văn Chiếu bắt đầu tập Vovinam năm 1965. Trước khi qua đời, thầy là người có đẳng cấp cao nhất môn phái, hồng đai 5 cấp (9 đẳng Vovinam quốc tế).',
+    tuKhoa: ['hoi dong vo su chuong quan', 'nguyen van chieu', '1949', '2020', 'long ho', 'vinh long', '1965', 'hong dai 5 cap', '9 dang'],
+    isDai: false
+  },
+
+  {
+    id: 17, ky: 2,
+    cau: 'Hãy cho biết về Võ sư Chánh Chưởng quản hiện nay của môn phái Vovinam?',
+    dapAn: 'Võ sư Chánh chưởng quản hiện nay là Võ sư Trần Văn Mỹ (sinh năm 1951), Phó chủ tịch Liên đoàn Vovinam Thế giới, Chủ tịch Liên đoàn Vovinam Việt Nam.\nThầy được Hội đồng Võ sư Chưởng quản bầu làm Chánh chưởng quản vào tháng 5/2024.\nThầy hiện đang sinh sống tại Thành phố Hồ Chí Minh.',
+    tuKhoa: ['tran van my', '1951', 'pho chu tich', 'lien doan vovinam the gioi', 'chu tich viet nam', 'thang 5 nam 2024'],
+    isDai: false
+  },
+
+  {
+    id: 18, ky: 2,
+    cau: 'Đọc thuộc lòng Mười Điều Tâm Niệm của môn sinh Vovinam?',
+    dapAn: '1. Việt Võ Đạo Sinh nguyện đạt tới cao độ của nghệ thuật để phục vụ dân tộc và nhân loại.\n2. VVĐS nguyện trung kiên phát huy môn phái, xây dựng thế hệ thanh niên dấn thân, hiến ích.\n3. VVĐS đồng tâm nhất trí, tôn kính người trên, thương mến đồng đạo.\n4. VVĐS tuyệt đối tôn trọng kỷ luật, nêu cao danh dự võ sĩ.\n5. VVĐS tôn trọng các võ phái khác, chỉ dùng võ để tự vệ và bênh vực lẽ phải.\n6. VVĐS chuyên cần học tập, rèn luyện tinh thần, trau dồi đạo hạnh.\n7. VVĐS sống trong sạch, giản dị, trung thực và cao thượng.\n8. VVĐS kiện toàn một ý chí đanh thép, nỗ lực tự thân cầu tiến.\n9. VVĐS sáng suốt nhận định, bền gan tranh đấu, tháo vát hành động.\n10. VVĐS tự tín, tự thắng, khiêm cung, độ lượng, luôn luôn kiểm điểm để tiến bộ.',
+    tuKhoa: ['cao do nghe thuat', 'dan toc nhan loai', 'trung kien phat huy', 'thanh nien dan than', 'dong tam nhat tri', 'ton kinh nguoi tren', 'ky luat', 'danh du vo si', 'tu ve benh vuc le phai', 'dao hanh', 'trong sach gian di trung thuc cao thuong', 'y chi danh thep', 'sang suot nhan dinh', 'ben gan tranh dau', 'tu tin tu thang khiem cung do luong'],
+    isDai: true
+  },
+
+  {
+    id: 19, ky: 2,
+    cau: 'Nêu ý nghĩa đại cương của 10 Điều Tâm Niệm?',
+    dapAn: 'Điều 1: nói về Hoài bão và mục đích học võ.\nĐiều 2: nói về Nghĩa vụ đối với môn phái và dân tộc.\nĐiều 3: nói về Tình đoàn kết trong môn phái.\nĐiều 4: nói về Võ kỷ và danh dự võ sĩ.\nĐiều 5: nói về Ý thức dụng võ.\nĐiều 6: nói về Ý hướng học tập và đời sống tinh thần.\nĐiều 7: nói về Tâm nguyện sống.\nĐiều 8: nói về Rèn luyện ý chí.\nĐiều 9: nói về Nếp suy cảm, nghị lực và tính thực tế.\nĐiều 10: nói về Đức sống và tinh thần cầu tiến.',
+    tuKhoa: ['hoai bao muc dich', 'nghia vu mon phai', 'doan ket', 'vo ky danh du', 'y thuc dung vo', 'doi song tinh than', 'tam nguyen song', 'ren luyen y chi', 'nghi luc', 'duc song cau tien'],
+    isDai: true
+  },
+
+  {
+    id: 20, ky: 2,
+    cau: 'Nêu ý nghĩa và giải thích đại cương Điều Tâm Niệm số 1?',
+    dapAn: 'Điều tâm niệm số 1: VVĐS nguyện đạt tới cao độ của nghệ thuật để phục vụ dân tộc và nhân loại.\n\nĐiều tâm niệm thứ nhất nói về hoài bão và mục đích tập võ của Việt Võ Đạo sinh là đạt tới cao độ của nghệ thuật để phục vụ dân tộc và nhân loại.',
+    tuKhoa: ['cao do nghe thuat', 'phuc vu dan toc', 'nhan loai', 'hoai bao', 'muc dich tap vo'],
+    isDai: false
+  },
+
+  {
+    id: 21, ky: 2,
+    cau: 'Vì sao VVĐS không hoài bão đạt đến tuyệt độ của nghệ thuật?',
+    dapAn: 'VVĐS không mang hoài bão đạt tuyệt độ của nghệ thuật vì nghệ thuật thì khôn cùng nên VVĐS chỉ hoài bão những gì hợp tình hợp lý có thể thực hiện được chứ không cuồng vọng, không tưởng.',
+    tuKhoa: ['nghe thuat khon cung', 'hop tinh hop ly', 'thuc hien duoc', 'khong cuong vong', 'khong tuong'],
+    isDai: false
+  },
+
+  {
+    id: 22, ky: 2,
+    cau: 'Nêu ý nghĩa và giải thích đại cương Điều Tâm Niệm số 2?',
+    dapAn: 'Điều tâm niệm số 2: VVĐS nguyện trung kiên phát huy môn phái, xây dựng thế hệ thanh niên dấn thân hiến ích.\n\nĐiều tâm niệm số 2 nói về nghĩa vụ của VVĐS đối với môn phái và dân tộc, đó là trung kiên phát huy môn phái và xây dựng thế hệ thanh niên dấn thân hiến ích.',
+    tuKhoa: ['trung kien phat huy mon phai', 'thanh nien dan than hien ich', 'nghia vu', 'dan toc'],
+    isDai: false
+  },
+
+  {
+    id: 23, ky: 2,
+    cau: 'Quan niệm về trung kiên của VVĐS ra sao?',
+    dapAn: 'Trung kiên là trung thành và kiên định đối với môn phái, với hướng đi của môn phái đã vạch ra chứ không phải trung kiên với cá nhân nào. Tuy nhiên nếu một cá nhân đang chấp chưởng công việc phát huy môn phái, đang đi theo hướng đi của môn phái đã vạch ra thì VVĐS phải có nghĩa vụ tiếp tay góp sức, triệt để kiên quyết trung thành với cá nhân đó.',
+    tuKhoa: ['trung thanh kien dinh', 'huong di mon phai', 'khong phai ca nhan', 'tiep tay gop suc', 'kiet de kien quyet'],
+    isDai: false
+  },
+
+  {
+    id: 24, ky: 2,
+    cau: 'VVĐS nên làm gì để phát huy môn phái?',
+    dapAn: 'Muốn phát huy môn phái, VVĐS phải:\n1. Dày công khổ luyện để trở thành võ sư, huấn luyện viên trực tiếp truyền bá võ thuật và võ đạo tới cộng đồng.\n2. Thực tập tinh thần Việt Võ Đạo trong đời sống hằng ngày:\n   - Trong gia đình: là người cha từ, con hiếu, anh hiền, em thảo.\n   - Với bạn bè: giữ thân tình, tín nghĩa.\n   - Với xã hội: là người công dân tốt.',
+    tuKhoa: ['day cong kho luyen', 'vo su huan luyen vien', 'truyen ba', 'cha tu con hieu', 'tin nghia', 'cong dan tot'],
+    isDai: false
+  },
+
+  {
+    id: 25, ky: 2,
+    cau: 'Tại sao phải xây dựng thế hệ thanh niên dấn thân hiến ích?',
+    dapAn: 'Phải xây dựng thế hệ thanh niên dấn thân hiến ích vì thanh niên là lực lượng khỏe mạnh nhất của đất nước, là tường thành kiên cố để xây dựng và bảo vệ tổ quốc.\nTinh thần võ đạo là hạt nhân khơi mở và phát triển lòng yêu nước, chiến đấu cho tổ quốc trường tồn.',
+    tuKhoa: ['luc luong khoe manh', 'tuong thanh kien co', 'bao ve to quoc', 'hat nhan khai mo', 'yeu nuoc', 'truong ton'],
+    isDai: false
+  },
+
+  {
+    id: 26, ky: 2,
+    cau: 'Nêu ý nghĩa và giải thích đại cương Điều Tâm Niệm số 3?',
+    dapAn: 'Điều tâm niệm số 3: VVĐS đồng tâm nhất trí, tôn kính người trên, thương mến đồng đạo.\n\nĐiều tâm niệm số 3 nói về tình đoàn kết trong môn phái. Muốn có đoàn kết VVĐS phải đồng tâm nhất trí, đối với người trên phải tôn kính, đối với đồng đạo phải thành thật thương mến nhau.',
+    tuKhoa: ['doan ket', 'dong tam nhat tri', 'ton kinh nguoi tren', 'thuong men dong dao'],
+    isDai: false
+  },
+
+  {
+    id: 27, ky: 2,
+    cau: 'Muốn xây dựng tình đoàn kết trong môn phái, VVĐS cần phải làm gì?',
+    dapAn: 'Muốn xây dựng tình đoàn kết trong môn phái, VVĐS phải loại bỏ mọi thành kiến cá nhân, tiêu trừ lòng tự ái sai lầm, mọi ý nghĩ cá nhân riêng lẻ, không thù hằn đồng môn. Nếu có những thắc mắc, phải tìm cách giải quyết ngay trong tinh thần xây dựng.',
+    tuKhoa: ['thanh kien ca nhan', 'tu ai sai lam', 'khong thu han dong mon', 'tinh than xay dung'],
+    isDai: false
+  },
+
+  {
+    id: 28, ky: 2,
+    cau: 'Nêu ý nghĩa và giải thích đại cương Điều Tâm Niệm số 4?',
+    dapAn: 'Điều tâm niệm số 4: VVĐS tuyệt đối tôn trọng kỷ luật, nêu cao danh dự võ sĩ.\n\nĐiều tâm niệm số 4 nói về võ kỷ và danh dự võ sĩ, đó là tuyệt đối tôn trọng kỷ luật môn phái và luôn nêu cao danh dự võ sĩ.',
+    tuKhoa: ['tuyet doi ton trong ky luat', 'nêu cao danh du vo si', 'vo ky'],
+    isDai: false
+  },
+
+  {
+    id: 29, ky: 2,
+    cau: 'Kỷ luật Việt Võ Đạo là kỷ luật gì?',
+    dapAn: 'Kỷ luật Việt võ đạo là kỷ luật tự giác, nghĩa là tự mình hiểu và tôn trọng kỷ luật, trông gương người mà thực hiện. Người trên muốn hướng dẫn người dưới điều gì thì người trên phải làm gương trước. Tuy nhiên người trên đã làm gương, đã nhắc nhở mà người dưới không tuân thủ và thực hành thì phải chịu hình thức kỷ luật hoặc đào thải.',
+    tuKhoa: ['tu giac', 'tu minh hieu', 'trong guong', 'lam guong truoc', 'khong tuan thu', 'dao thai'],
+    isDai: false
+  },
+
+  {
+    id: 30, ky: 2,
+    cau: 'Danh dự võ sĩ là gì? Thế nào là anh hùng cá nhân chủ nghĩa?',
+    dapAn: 'Danh dự võ sĩ là danh dự của một tập thể người có tư tưởng và hành động hiên ngang, cao cả, bênh vực người yếu bị kẻ mạnh bắt nạt. Đây là một thứ danh dự vượt trên lòng tự ái cá nhân để hòa mình vào nền võ đạo.\n\nAnh hùng cá nhân chủ nghĩa là người có tài nhưng ý thức kỷ luật kém, không chịu khép mình trong khuôn khổ, làm việc tùy hứng, không có chí hướng nhất định.',
+    tuKhoa: ['hien ngang cao ca', 'benh vuc nguoi yeu', 'vuot tren tu ai', 'vo dao', 'co tai nhung ky luat kem', 'tuy hung', 'khong chi huong'],
+    isDai: false
+  },
+
+  // ============================================================
+  // KỲ VÕ 3 – Câu 31 đến 50
+  // Điều Tâm Niệm số 5 đến số 10
+  // ============================================================
+
+  {
+    id: 31, ky: 3,
+    cau: 'Nêu ý nghĩa và giải thích đại cương Điều Tâm Niệm số 5?',
+    dapAn: 'Điều tâm niệm số 5: VVĐS tôn trọng các võ phái khác, chỉ dùng võ để tự vệ và bênh vực lẽ phải.\n\nĐiều tâm niệm số 5 nói về ý thức dụng võ của Việt Võ Đạo Sinh, đó là luôn luôn tôn trọng các võ phái khác, chỉ dùng võ để tự vệ và bênh vực lẽ phải.',
+    tuKhoa: ['ton trong cac vo phai khac', 'tu ve benh vuc le phai', 'y thuc dung vo'],
+    isDai: false
+  },
+
+  {
+    id: 32, ky: 3,
+    cau: 'Tại sao VVĐS phải tôn trọng các võ phái khác?',
+    dapAn: 'Mỗi võ phái đều có cái hay, cái đẹp, cái đặc thù riêng.\nĐối với các võ phái khác, chúng ta luôn luôn phải tôn trọng, kết thân, giao tiếp, tạo tình hữu nghị để mọi người có cảm tình và mến phục, phải sống hòa đồng, tránh va chạm, xích mích giữa cá nhân và giữa các võ đường với nhau.\nKhi ở một vị thế của võ phái này, chúng ta không nên phê bình, chê trách hoặc dèm pha các võ phái khác. Vì mình có tôn trọng người, thì người mới tôn trọng mình.',
+    tuKhoa: ['cai hay cai dep dac thu', 'ket than giao tiep', 'huu nghi', 'hoa dong', 'khong phe binh dem pha', 'ton trong nguoi'],
+    isDai: false
+  },
+
+  {
+    id: 33, ky: 3,
+    cau: 'Nếu võ phái khác có một cá nhân hư hỏng, VVĐS có quan niệm như thế nào?',
+    dapAn: 'Khi gặp phải một phần tử hư hỏng của võ phái khác, VVĐS chỉ coi đó là một việc làm bất đắc dĩ để cảm hóa hướng thiện một cá nhân hư hỏng, chứ không vơ đũa cả nắm có những suy nghĩ không tốt về võ phái của họ.',
+    tuKhoa: ['bat dac di', 'cam hoa huong thien', 'ca nhan hu hong', 'khong vo dua ca nam'],
+    isDai: false
+  },
+
+  {
+    id: 34, ky: 3,
+    cau: 'Nêu ý nghĩa và giải thích đại cương Điều Tâm Niệm số 6?',
+    dapAn: 'Điều tâm niệm số 6: VVĐS chuyên cần học tập, rèn luyện tinh thần, trau dồi đạo hạnh.\n\nĐiều tâm niệm số 6 nói về ý hướng học tập và đời sống tinh thần của VVĐS, đó là phải chuyên cần học tập (võ thuật, võ đạo, văn hóa, nghề nghiệp...) rèn luyện tinh thần và trau dồi đạo hạnh (đạo hạnh: đạo đức và các phẩm chất tốt đẹp ở con người).',
+    tuKhoa: ['chuyen can hoc tap', 'ren luyen tinh than', 'trau doi dao hanh', 'dao duc pham chat'],
+    isDai: false
+  },
+
+  {
+    id: 35, ky: 3,
+    cau: 'Muốn rèn luyện tinh thần, VVĐS phải làm gì?',
+    dapAn: 'Muốn rèn luyện tinh thần, VVĐS phải:\n1. SỐNG KHỎE: Thân thể khỏe mạnh, tư tưởng trong sáng.\n2. SỐNG ĐỨC ĐỘ: Luôn luôn bao dung, điều hòa, khắc chế (chế ngự, sửa đổi một cách nghiêm khắc) bản thân và người khác để cùng tiến bộ.\n3. SỐNG CƯƠNG TRỰC: Cương quyết và thẳng thắn.\n4. SỐNG TRẦM TĨNH: Điềm đạm, bình tĩnh để tránh trường hợp xốc nổi, nóng vội.\n5. SỐNG THÁO VÁT: Lanh lợi, chủ động, uyển chuyển để có thể ứng phó được với mọi hoàn cảnh, mọi trường hợp bất ngờ.',
+    tuKhoa: ['song khoe', 'duc do', 'cuong truc', 'tram tinh', 'thao vat', 'bao dung dieu hoa khac che', 'cuong quyet thang than', 'diem dam binh tinh', 'lanh loi chu dong'],
+    isDai: true
+  },
+
+  {
+    id: 36, ky: 3,
+    cau: 'Đạo hạnh là gì? Tại sao VVĐS phải trau dồi đạo hạnh?',
+    dapAn: 'Đạo hạnh là một khái niệm rộng bao gồm đạo đức và các phẩm chất cao đẹp khác của con người. Đạo hạnh được thể hiện qua lời nói, hành động, suy nghĩ và thái độ của con người. Đạo hạnh thường được thể hiện qua những đức tính như: nhân ái, từ bi, trí tuệ, kiên nhẫn, tha thứ, khiêm tốn, sự chân thành, sự tự tin, kiên định và sự bình tĩnh.\n\nVVĐS phải trau dồi đạo hạnh vì đây là căn bản cho mọi đức tính, vô cùng cần thiết cho sự rèn luyện tinh thần, phù hợp với võ thuật và võ đạo, thích ứng với mọi hoàn cảnh.',
+    tuKhoa: ['dao duc pham chat', 'nhan ai tu bi', 'kien nhan tha thu khiem ton', 'can ban duc tinh', 'ren luyen tinh than', 'vo thuat vo dao'],
+    isDai: false
+  },
+
+  {
+    id: 37, ky: 3,
+    cau: 'Nêu ý nghĩa và giải thích đại cương Điều Tâm Niệm số 7?',
+    dapAn: 'Điều tâm niệm số 7: VVĐS sống trong sạch, giản dị, trung thực và cao thượng.\n\nĐiều tâm niệm số 7 nói về tâm nguyện sống của VVĐS. Đó là sống trong sạch, giản dị, trung thực và cao thượng.',
+    tuKhoa: ['trong sach', 'gian di', 'trung thuc', 'cao thuong', 'tam nguyen song'],
+    isDai: false
+  },
+
+  {
+    id: 38, ky: 3,
+    cau: 'Quan niệm về đức trong sạch của VVĐS?',
+    dapAn: 'Sống trong sạch của Việt Võ Đạo Sinh là giữ gìn bản thân mình cho trong sạch, nhưng không tiêu cực, bưng tai bịt mắt trước mọi xấu xa tội lỗi của xã hội. Mà trái lại phải lắng nghe, nhìn thẳng vào sự thật của đời sống để tìm hiểu, giải quyết và chủ động góp phần cải tạo nó theo hướng tốt đẹp.',
+    tuKhoa: ['giu gin ban than', 'khong tieu cuc', 'lang nghe nhin thang su that', 'chu dong cai tao', 'huong tot dep'],
+    isDai: false
+  },
+
+  {
+    id: 39, ky: 3,
+    cau: 'Nếp sống giản dị của VVĐS như thế nào?',
+    dapAn: 'Sống giản dị là không đua đòi, sống phù hợp với hoàn cảnh kinh tế của bản thân và xã hội.\nCó điều kiện thì hưởng những tiện nghi tốt đẹp, không có điều kiện thì không than phiền, đòi hỏi, hạch sách, gây phiền toái khó chịu cho mọi người.',
+    tuKhoa: ['khong dua doi', 'phu hop hoan canh', 'co dieu kien', 'khong than phien doi hoi'],
+    isDai: false
+  },
+
+  {
+    id: 40, ky: 3,
+    cau: 'Trung thực của VVĐS như thế nào?',
+    dapAn: 'VVĐS sống thủy chung thành thật với mọi người, nhưng VVĐS cũng cần phải tìm hiểu sự gian trá của người để vừa tránh khỏi bị người lừa gạt vừa để tự thắng mình (không nhiễm gian trá, tổn hại đến đạo hạnh). Trong trường hợp cần thiết VVĐS phải chứng tỏ cho đối phương biết rằng thủ đoạn gian trá của họ không thể thành công.',
+    tuKhoa: ['thuy chung thanh that', 'tim hieu gian tra', 'tranh lua gat', 'tu thang minh', 'thu doan gian tra khong thanh cong'],
+    isDai: false
+  },
+
+  {
+    id: 41, ky: 3,
+    cau: 'Thế nào là cao thượng? Bất chợt nhường nhịn tha thứ có phải là cao thượng không?',
+    dapAn: 'Cao thượng là vượt hẳn lên trên những cái tầm thường, nhỏ nhen về phẩm chất tinh thần, là công phu hàm dưỡng lâu dài.\nThái độ bất chợt nhường nhịn tha thứ cho người chỉ là tính khí bốc đồng không định hướng chứ không phải là cao thượng.',
+    tuKhoa: ['vuot han len tren', 'tam thuong nho nhen', 'ham duong lau dai', 'bot dong khong dinh huong', 'khong phai cao thuong'],
+    isDai: false
+  },
+
+  {
+    id: 42, ky: 3,
+    cau: 'Nêu ý nghĩa và giải thích đại cương Điều Tâm Niệm số 8?',
+    dapAn: 'Điều tâm niệm số 8: VVĐS kiện toàn một ý chí đanh thép, nỗ lực tự thân cầu tiến.\n\nĐiều tâm niệm số 8 nói về ý chí của Việt Võ Đạo Sinh là phải rèn luyện cho bản thân một ý chí đanh thép, bằng cách luôn luôn tỉnh táo đương đầu với mọi thử thách gian nguy, tự thân tiến bộ.',
+    tuKhoa: ['y chi danh thep', 'no luc tu than cau tien', 'tinh tao duong dau', 'thu thach gian nguy'],
+    isDai: false
+  },
+
+  {
+    id: 43, ky: 3,
+    cau: 'Muốn kiện toàn ý chí đanh thép, VVĐS phải làm như thế nào?',
+    dapAn: 'Muốn kiện toàn ý chí đanh thép VVĐS phải:\n1. Nghiên cứu kỹ lưỡng, tìm hiểu cân nhắc các sự kiện đã thu lượm được trước khi quyết định.\n2. Thực hiện cho bằng được quyết định của mình với tất cả năng lực nhiệt tình và cương quyết khi bắt tay vào việc.',
+    tuKhoa: ['nghien cuu ky luong', 'can nhac truoc khi quyet dinh', 'thuc hien cho bang duoc', 'nang luc nhiet tinh cuong quyet'],
+    isDai: false
+  },
+
+  {
+    id: 44, ky: 3,
+    cau: 'Nêu ý nghĩa đại cương Điều Tâm Niệm số 9?',
+    dapAn: 'Điều tâm niệm số 9: VVĐS sáng suốt nhận định, bền gan tranh đấu, tháo vát hành động.\n\nĐiều tâm niệm số 9 nói về nếp suy cảm, nghị lực và tính thực tế của VVĐS, đó là phải sáng suốt khi nhận định, bền gan khi tranh đấu và tháo vát khi hành động.',
+    tuKhoa: ['sang suot nhan dinh', 'ben gan tranh dau', 'thao vat hanh dong', 'nghi luc', 'tinh thuc te'],
+    isDai: false
+  },
+
+  {
+    id: 45, ky: 3,
+    cau: 'Tại sao cần phải sáng suốt nhận định?',
+    dapAn: 'VVĐS cần sáng suốt nhận định để phân biệt phải trái, đúng sai, tốt xấu, tình lý, mặt trái, mặt phải, các khúc mắc của sự việc. Nhằm hành xử cho hợp thời, đúng lúc, tránh được hậu quả tai hại.',
+    tuKhoa: ['phan biet phai trai', 'dung sai tot xau', 'tinh ly mat trai mat phai', 'hanh xu hop thoi', 'tranh hau qua tai hai'],
+    isDai: false
+  },
+
+  {
+    id: 46, ky: 3,
+    cau: 'Thế nào là bền gan tranh đấu?',
+    dapAn: 'Bền gan tranh đấu là có một ý chí và nghị lực sung mãn, thất bại không nản lòng, không chịu khuất phục trước sức mạnh, giải quyết các khó khăn một cách bền bỉ dẻo dai.',
+    tuKhoa: ['y chi nghi luc sung man', 'that bai khong nan long', 'khong chiu khuat phuc', 'ben bi deo dai'],
+    isDai: true
+  },
+
+  {
+    id: 47, ky: 3,
+    cau: 'Thế nào là tháo vát hành động?',
+    dapAn: 'Hành động tháo vát là hành động chủ động, thông minh, sáng tạo, thích ứng với mọi hoàn cảnh, hợp tình hợp lý với mọi trường hợp. Người tháo vát hành động là người yêu người, thương người, hợp tác với người, không ỷ lại, dựa dẫm vào người, luôn luôn ứng phó với nghịch cảnh, nhưng không gian trá, kêu căng, khinh địch, lạc quan hoặc bi quan quá trớn.',
+    tuKhoa: ['chu dong thong minh sang tao', 'thich ung moi hoan canh', 'hop tac', 'khong y lai', 'ung pho nghich canh', 'khong gian tra keu cang'],
+    isDai: false
+  },
+
+  {
+    id: 48, ky: 3,
+    cau: 'Nêu ý nghĩa đại cương Điều Tâm Niệm số 10?',
+    dapAn: 'Điều tâm niệm số 10: VVĐS tự tín, tự thắng, khiêm cung, độ lượng, luôn luôn kiểm điểm để tiến bộ.\n\nĐiều tâm niệm số 10 nói về đức sống và tinh thần cầu tiến của Việt Võ Đạo Sinh. Với bản thân, VVĐS phải tự tín, tự thắng, luôn luôn kiểm điểm để tự tiến bộ. Đối với người phải khiêm cung và độ lượng.',
+    tuKhoa: ['tu tin', 'tu thang', 'khiem cung', 'do luong', 'kiem diem tien bo', 'duc song cau tien'],
+    isDai: false
+  },
+
+  {
+    id: 49, ky: 3,
+    cau: 'Thế nào là tự tín, tự thắng, khiêm cung, độ lượng?',
+    dapAn: '- Tự tín: Tin ở năng lực, phẩm chất đạo đức và ý chí của bản thân, biết phát huy cái tốt đẹp của bản thân để tiến bộ.\n- Tự thắng: Thắng được mình, tự sửa chữa những thói hư, tật xấu, những vị kỷ yếu đuối của bản thân.\n- Khiêm cung: Khiêm nhường và cung kính với người trên hay người cao tuổi hơn mình.\n- Độ lượng: Rộng lượng với người dưới hay người nhỏ tuổi hơn mình.',
+    tuKhoa: ['tin nang luc pham chat', 'phat huy cai tot dep', 'sua chua thoi hu tat xau', 'vi ky yeu duoi', 'khiem nhuong cung kinh', 'rong luong nguoi duoi'],
+    isDai: false
+  },
+
+  {
+    id: 50, ky: 3,
+    cau: 'VVĐS nhìn lại những điều đã qua với thái độ thế nào?',
+    dapAn: 'VVĐS nhìn lại sự việc đã qua bằng thái độ luôn luôn tự kiểm điểm những ưu khuyết điểm hầu rút ra các bài học kinh nghiệm để tiến bộ. Chứ không phải nhìn lại những bước đã qua bằng đôi mắt kiêu ngạo, tự mãn trước thành công hoặc than van trách móc trước thất bại đổ vỡ.',
+    tuKhoa: ['tu kiem diem', 'uu khuyet diem', 'rut bai hoc kinh nghiem', 'khong kieu ngao tu man', 'khong than van trach moc'],
+    isDai: false
+  }
+
+]; // === KẾT THÚC MẢNG CHUONG_TRINH ===
+
+// ============================================================
+// 2. BIẾN TRẠNG THÁI ỨNG DỤNG (App State)
+// ============================================================
+let appState = {
+  selectedLevel: 1,        // Kỳ thi đang chọn: 1, 2, hoặc 3
+  selectedMode: 'exam',    // Chế độ: 'exam', 'sequential', 'flashcard', 'weak'
+  sessionQuestions: [],    // Danh sách câu hỏi của phiên hiện tại
+  currentIndex: 0,         // Chỉ số câu hỏi hiện tại trong phiên
+  sessionResults: [],      // Kết quả từng câu trong phiên: [{id, score, recognized}]
+  timerEnabled: true,      // Bật/tắt đồng hồ đếm ngược
+  timerSeconds: 30,        // Thời gian mặc định (giây)
+  timerCountdown: 30,      // Giá trị đồng hồ hiện tại
+  timerInterval: null,     // setInterval handle
+  isListening: false,      // Trạng thái ghi âm
+  isSampleShowing: false,  // Đang hiện đáp án mẫu hay không
+  flashcardFlipped: false, // Trạng thái lật flashcard
+};
+
+// ============================================================
+// 3. QUẢN LÝ localStorage – Tiến độ học tập
+// ============================================================
+
+/** Khóa lưu trữ trong localStorage */
+const LS_KEY = 'vovinam_progress_v1';
+
+/** Đọc tiến độ từ localStorage */
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch (e) {
+    return {};
+  }
+}
+
+/** Lưu tiến độ vào localStorage */
+function saveProgress(data) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.warn('Không thể lưu localStorage:', e);
+  }
+}
+
+/**
+ * Cập nhật điểm của một câu vào tiến độ.
+ * @param {number} questionId - ID câu hỏi
+ * @param {number} score - Điểm 0-100
+ */
+function updateQuestionScore(questionId, score) {
+  const progress = loadProgress();
+  if (!progress.scores) progress.scores = {};
+  // Lưu điểm cao nhất nếu câu đã có kết quả
+  const existing = progress.scores[questionId];
+  if (existing === undefined || score > existing) {
+    progress.scores[questionId] = score;
+  }
+  if (!progress.history) progress.history = [];
+  progress.history.push({ id: questionId, score, time: Date.now() });
+  saveProgress(progress);
+}
+
+/** Lấy điểm hiện tại của một câu từ tiến độ */
+function getQuestionScore(questionId) {
+  const progress = loadProgress();
+  if (!progress.scores) return null;
+  return progress.scores[questionId] !== undefined ? progress.scores[questionId] : null;
+}
+
+/** Cập nhật hiển thị tiến độ tổng quan trên màn hình chính */
+function renderHomeStats() {
+  const progress = loadProgress();
+  const scores = progress.scores || {};
+  const allIds = CHUONG_TRINH.map(q => q.id);
+  const done = allIds.filter(id => scores[id] !== undefined).length;
+  const weakIds = allIds.filter(id => scores[id] !== undefined && scores[id] < 50);
+  const avgList = allIds.filter(id => scores[id] !== undefined).map(id => scores[id]);
+  const avg = avgList.length > 0 ? (avgList.reduce((a,b) => a+b, 0) / avgList.length).toFixed(0) : null;
+
+  document.getElementById('stat-done').textContent  = done;
+  document.getElementById('stat-avg').textContent   = avg !== null ? avg + '%' : '—';
+  document.getElementById('stat-weak').textContent  = weakIds.length;
+
+  const pct = Math.round(done / 50 * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = done + ' / 50';
+  document.getElementById('progress-text').textContent =
+    done === 0 ? 'Chưa bắt đầu' :
+    done === 50 ? '✅ Hoàn thành toàn bộ!' :
+    `Đã học ${pct}%`;
+}
+
+// ============================================================
+// 4. XUẤT / NHẬP TIẾN TRÌNH
+// ============================================================
+
+/** Xuất tiến trình học ra file .json */
+function exportProgress() {
+  const progress = loadProgress();
+  const scores = progress.scores || {};
+  // Xây dựng danh sách câu yếu để thêm vào file xuất
+  const weakList = CHUONG_TRINH
+    .filter(q => scores[q.id] !== undefined && scores[q.id] < 50)
+    .map(q => ({ id: q.id, cau: q.cau, score: scores[q.id] }));
+
+  const exportData = {
+    exportTime: new Date().toISOString(),
+    appVersion: 'vovinam-v1',
+    scores,
+    weakList,
+    history: progress.history || []
+  };
+
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'vovinam_tiendo_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ Đã xuất tiến trình thành công!');
+}
+
+/** Nhập tiến trình từ file .json */
+function importProgress(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.scores || data.appVersion !== 'vovinam-v1') {
+        showToast('❌ File không đúng định dạng!');
+        return;
+      }
+      const progress = { scores: data.scores, history: data.history || [] };
+      saveProgress(progress);
+      renderHomeStats();
+      showToast('✅ Đã khôi phục tiến trình học!');
+    } catch (err) {
+      showToast('❌ Lỗi đọc file. Vui lòng thử lại.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+/** Xóa toàn bộ tiến trình */
+function resetAllProgress() {
+  if (!confirm('Bạn có chắc muốn XÓA TOÀN BỘ tiến trình học không?')) return;
+  localStorage.removeItem(LS_KEY);
+  renderHomeStats();
+  showToast('🗑️ Đã xóa toàn bộ tiến trình.');
+}
+
+// ============================================================
+// 5. CHỌN CẤP ĐỘ VÀ CHẾ ĐỘ
+// ============================================================
+
+/** Chọn kỳ thi */
+function selectLevel(level) {
+  appState.selectedLevel = level;
+  document.querySelectorAll('.level-tab').forEach(el => {
+    el.classList.toggle('selected', parseInt(el.dataset.level) === level);
+  });
+}
+
+/** Chọn chế độ luyện tập */
+function selectMode(mode) {
+  appState.selectedMode = mode;
+  document.querySelectorAll('.mode-card').forEach(el => {
+    el.classList.toggle('selected', el.dataset.mode === mode);
+  });
+}
+
+// ============================================================
+// 6. KHỞI TẠO PHIÊN LUYỆN TẬP
+// ============================================================
+
+/** Xây dựng danh sách câu hỏi cho phiên dựa trên cấp độ và chế độ */
+function buildSessionQuestions() {
+  const level = appState.selectedLevel;
+  const mode  = appState.selectedMode;
+  const progress = loadProgress();
+  const scores = progress.scores || {};
+
+  // Lọc câu theo kỳ thi
+  let pool = CHUONG_TRINH.filter(q => q.ky === level);
+
+  if (mode === 'exam') {
+    // --- CHẾ ĐỘ THI THỬ: Chọn ngẫu nhiên 3 câu ---
+    // Tuân theo quy định: nếu có câu dài → tối đa 1 câu dài + 1 câu ngắn
+    const daiIds = [9,10,11,17,18,35,46]; // Các ID câu có đáp án dài
+    let shuffled = shuffleArray([...pool]);
+
+    let result = [];
+    let hasDai = false;
+
+    for (const q of shuffled) {
+      if (result.length >= 3) break;
+      const isDai = daiIds.includes(q.id);
+      if (isDai) {
+        if (hasDai) continue; // Đã có 1 câu dài, bỏ qua câu dài tiếp theo
+        if (result.length >= 2) continue; // Câu dài nên để slot cuối hoặc không vượt quá 2 câu khi đã có dài
+        hasDai = true;
+      }
+      result.push(q);
+    }
+    // Nếu số câu chưa đủ 3 (do quy tắc câu dài), bổ sung thêm câu ngắn
+    if (result.length < 3 && !hasDai) {
+      for (const q of shuffled) {
+        if (result.length >= 3) break;
+        if (!result.includes(q) && !daiIds.includes(q.id)) result.push(q);
+      }
+    }
+    return result;
+
+  } else if (mode === 'sequential') {
+    // --- CHẾ ĐỘ HỌC THUỘC LÒNG: Tuần tự tất cả câu trong kỳ ---
+    return pool;
+
+  } else if (mode === 'flashcard') {
+    // --- CHẾ ĐỘ FLASHCARD: Tất cả câu trong kỳ ---
+    return pool;
+
+  } else if (mode === 'weak') {
+    // --- CHẾ ĐỘ ÔN CÂU YẾU: Câu dưới 50% (toàn bộ 50 câu) ---
+    const weak = CHUONG_TRINH.filter(q =>
+      scores[q.id] !== undefined && scores[q.id] < 50
+    );
+    if (weak.length === 0) {
+      showToast('🎉 Không có câu yếu! Hãy chọn chế độ khác.');
+      return null;
+    }
+    return weak;
+  }
+
+  return pool;
+}
+
+/** Hàm xáo trộn mảng (Fisher-Yates) */
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/** Bắt đầu một phiên luyện tập mới */
+function startSession() {
+  const questions = buildSessionQuestions();
+  if (!questions || questions.length === 0) return;
+
+  appState.sessionQuestions = questions;
+  appState.currentIndex = 0;
+  appState.sessionResults = [];
+
+  // Đồng bộ tốc độ TTS từ màn hình chính sang màn hình luyện
+  const mainSpeed = document.getElementById('tts-speed-select').value;
+  document.getElementById('tts-speed-practice').value = mainSpeed;
+
+  showScreen('practice');
+  renderCurrentQuestion();
+}
+
+// ============================================================
+// 7. HIỂN THỊ CÂU HỎI
+// ============================================================
+
+/** Hiển thị câu hỏi hiện tại dựa trên chế độ */
+function renderCurrentQuestion() {
+  const q = appState.sessionQuestions[appState.currentIndex];
+  if (!q) {
+    showResults();
+    return;
+  }
+
+  const total = appState.sessionQuestions.length;
+  const idx   = appState.currentIndex + 1;
+
+  // Cập nhật counter
+  document.getElementById('session-counter').textContent = `Câu ${idx} / ${total}`;
+
+  if (appState.selectedMode === 'flashcard') {
+    // === CHẾ ĐỘ FLASHCARD ===
+    document.getElementById('voice-mode-card').style.display    = 'none';
+    document.getElementById('flashcard-mode-card').style.display = 'block';
+    document.getElementById('timer-row').style.display = 'none'; // Flashcard không cần đồng hồ
+
+    document.getElementById('fc-number').textContent = `Câu ${idx} / ${total}`;
+    const badgeEl = document.getElementById('fc-level-badge');
+    badgeEl.textContent = 'Võ ' + q.ky;
+    badgeEl.className = 'question-level-badge badge-vo' + q.ky;
+
+    document.getElementById('fc-front').textContent = q.cau;
+    document.getElementById('fc-back').textContent  = q.dapAn;
+    // Reset trạng thái lật
+    appState.flashcardFlipped = false;
+    document.getElementById('flashcard-inner').classList.remove('flipped');
+
+  } else {
+    // === CÁC CHẾ ĐỘ CÓ MIC ===
+    document.getElementById('voice-mode-card').style.display    = 'block';
+    document.getElementById('flashcard-mode-card').style.display = 'none';
+
+    // Hiển thị / ẩn đồng hồ
+    const timerRow = document.getElementById('timer-row');
+    timerRow.style.display = appState.timerEnabled ? 'flex' : 'none';
+
+    // Cập nhật số câu và badge kỳ
+    document.getElementById('q-number').textContent = `Câu ${idx} / ${total}`;
+    const badgeEl = document.getElementById('q-level-badge');
+    badgeEl.textContent = 'Võ ' + q.ky;
+    badgeEl.className = 'question-level-badge badge-vo' + q.ky;
+
+    // Hiển thị nội dung câu hỏi
+    document.getElementById('q-text').textContent = q.cau;
+
+    // Reset mic và kết quả
+    resetMicArea();
+    hideScoreResult();
+    hideSampleAnswer();
+    document.getElementById('btn-next').disabled = true;
+    document.getElementById('btn-mic').textContent = '🎙️ Bắt đầu ghi âm';
+
+    // Khởi động đồng hồ đếm ngược nếu bật
+    if (appState.timerEnabled) {
+      startTimer();
+    }
+
+    // Tự động đọc câu hỏi bằng TTS
+    speakCurrentQuestion();
+  }
+}
+
+// ============================================================
+// 8. HÀM QUẢN LÝ SPEECH (TTS + STT)
+// ============================================================
+
+/** TTS – Đọc câu hỏi hiện tại bằng Web Speech API */
+function speakCurrentQuestion() {
+  const q = appState.sessionQuestions[appState.currentIndex];
+  if (!q) return;
+  speakText(q.cau);
+}
+
+/** TTS – Đọc một đoạn văn bản */
+function speakText(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'vi-VN';
+
+  // Lấy tốc độ từ select trong màn hình luyện
+  const rateEl = document.getElementById('tts-speed-practice');
+  utt.rate = rateEl ? parseFloat(rateEl.value) : 1.0;
+  utt.pitch = 1.0;
+  utt.volume = 1.0;
+
+  // Ưu tiên giọng tiếng Việt nếu có
+  const voices = window.speechSynthesis.getVoices();
+  const vnVoice = voices.find(v => v.lang.startsWith('vi'));
+  if (vnVoice) utt.voice = vnVoice;
+
+  window.speechSynthesis.speak(utt);
+}
+
+/** TTS – Dừng đọc */
+function stopTTS() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+// --- STT (Speech-to-Text) ---
+let recognitionInstance = null;
+let accumulatedTranscript = '';
+
+/** Bắt đầu / dừng ghi âm */
+function toggleMic() {
+  if (appState.isListening) {
+    stopListening();
+  } else {
+    startListening();
+  }
+}
+
+/** Khởi động ghi âm Web Speech API */
+function startListening() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    showToast('❌ Trình duyệt không hỗ trợ nhận dạng giọng nói. Dùng Chrome/Edge.');
+    return;
+  }
+
+  stopTTS(); // Tắt TTS khi bắt đầu nghe
+  accumulatedTranscript = '';
+
+  recognitionInstance = new SpeechRecognition();
+  recognitionInstance.lang = 'vi-VN';
+  recognitionInstance.continuous = true;
+  recognitionInstance.interimResults = true;
+
+  recognitionInstance.onstart = function() {
+    appState.isListening = true;
+    setMicListening(true);
+    pauseTimer();
+    document.getElementById('btn-mic').textContent = '⏹ Dừng ghi âm';
+  };
+
+  recognitionInstance.onresult = function(event) {
+    let interim = '';
+    let final   = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        final += transcript + ' ';
+      } else {
+        interim += transcript;
+      }
+    }
+    accumulatedTranscript += final;
+    document.getElementById('mic-transcript').textContent =
+      (accumulatedTranscript + interim).trim() || '(đang nghe...)';
+  };
+
+  recognitionInstance.onerror = function(event) {
+    console.warn('Speech recognition error:', event.error);
+    if (event.error !== 'no-speech') {
+      showToast('⚠️ Lỗi mic: ' + event.error + '. Thử lại hoặc nhấn Bỏ qua.');
+    }
+    stopListening();
+  };
+
+  recognitionInstance.onend = function() {
+    appState.isListening = false;
+    setMicListening(false);
+    document.getElementById('btn-mic').textContent = '🎙️ Ghi âm lại';
+    // Nếu đã có transcript thì tự động chấm điểm
+    if (accumulatedTranscript.trim().length > 3) {
+      gradeAnswer(accumulatedTranscript.trim());
+    }
+    resumeTimer();
+  };
+
+  try {
+    recognitionInstance.start();
+  } catch (e) {
+    showToast('❌ Không thể khởi động mic. Vui lòng cho phép quyền truy cập.');
+  }
+}
+
+/** Dừng ghi âm */
+function stopListening() {
+  if (recognitionInstance) {
+    try { recognitionInstance.stop(); } catch(e) {}
+    recognitionInstance = null;
+  }
+  appState.isListening = false;
+  setMicListening(false);
+  document.getElementById('btn-mic').textContent = '🎙️ Ghi âm lại';
+}
+
+/** Cập nhật giao diện khu vực mic */
+function setMicListening(listening) {
+  const micArea = document.getElementById('mic-area');
+  const micStatus = document.getElementById('mic-status');
+  if (listening) {
+    micArea.classList.add('listening');
+    document.getElementById('mic-icon').textContent = '🔴';
+    micStatus.textContent = '🎙️ Đang nghe... Hãy trả lời rõ ràng';
+  } else {
+    micArea.classList.remove('listening');
+    document.getElementById('mic-icon').textContent = '🎙️';
+    micStatus.textContent = 'Nhấn "Ghi âm" để trả lời, hoặc "Bỏ qua" để chuyển câu';
+  }
+}
+
+/** Reset khu vực mic về trạng thái ban đầu */
+function resetMicArea() {
+  stopListening();
+  accumulatedTranscript = '';
+  document.getElementById('mic-transcript').textContent = '';
+  document.getElementById('mic-status').textContent = 'Nhấn "Ghi âm" để trả lời, hoặc "Bỏ qua" để chuyển câu';
+  document.getElementById('mic-area').classList.remove('listening');
+  document.getElementById('mic-icon').textContent = '🎙️';
+}
+
+// ============================================================
+// 9. THUẬT TOÁN CHẤM ĐIỂM (Keyword Matching)
+// ============================================================
+
+/**
+ * Chuẩn hóa chuỗi: chuyển thường, xóa dấu tiếng Việt, xóa ký tự đặc biệt.
+ * @param {string} text - Chuỗi cần chuẩn hóa
+ * @returns {string} - Chuỗi đã chuẩn hóa
+ */
+function normalizeText(text) {
+  if (!text) return '';
+  // Bảng thay thế dấu tiếng Việt
+  const map = {
+    'à':'a','á':'a','ả':'a','ã':'a','ạ':'a',
+    'ă':'a','ắ':'a','ặ':'a','ằ':'a','ẳ':'a','ẵ':'a',
+    'â':'a','ấ':'a','ầ':'a','ẩ':'a','ẫ':'a','ậ':'a',
+    'è':'e','é':'e','ẻ':'e','ẽ':'e','ẹ':'e',
+    'ê':'e','ế':'e','ề':'e','ể':'e','ễ':'e','ệ':'e',
+    'ì':'i','í':'i','ỉ':'i','ĩ':'i','ị':'i',
+    'ò':'o','ó':'o','ỏ':'o','õ':'o','ọ':'o',
+    'ô':'o','ố':'o','ồ':'o','ổ':'o','ỗ':'o','ộ':'o',
+    'ơ':'o','ớ':'o','ờ':'o','ở':'o','ỡ':'o','ợ':'o',
+    'ù':'u','ú':'u','ủ':'u','ũ':'u','ụ':'u',
+    'ư':'u','ứ':'u','ừ':'u','ử':'u','ữ':'u','ự':'u',
+    'ỳ':'y','ý':'y','ỷ':'y','ỹ':'y','ỵ':'y',
+    'đ':'d',
+    // Hoa
+    'À':'a','Á':'a','Ả':'a','Ã':'a','Ạ':'a',
+    'Ă':'a','Ắ':'a','Ặ':'a','Ằ':'a','Ẳ':'a','Ẵ':'a',
+    'Â':'a','Ấ':'a','Ầ':'a','Ẩ':'a','Ẫ':'a','Ậ':'a',
+    'È':'e','É':'e','Ẻ':'e','Ẽ':'e','Ẹ':'e',
+    'Ê':'e','Ế':'e','Ề':'e','Ể':'e','Ễ':'e','Ệ':'e',
+    'Ì':'i','Í':'i','Ỉ':'i','Ĩ':'i','Ị':'i',
+    'Ò':'o','Ó':'o','Ỏ':'o','Õ':'o','Ọ':'o',
+    'Ô':'o','Ố':'o','Ồ':'o','Ổ':'o','Ỗ':'o','Ộ':'o',
+    'Ơ':'o','Ớ':'o','Ờ':'o','Ở':'o','Ỡ':'o','Ợ':'o',
+    'Ù':'u','Ú':'u','Ủ':'u','Ũ':'u','Ụ':'u',
+    'Ư':'u','Ứ':'u','Ừ':'u','Ử':'u','Ữ':'u','Ự':'u',
+    'Ỳ':'y','Ý':'y','Ỷ':'y','Ỹ':'y','Ỵ':'y',
+    'Đ':'d'
+  };
+  return text
+    .split('')
+    .map(c => map[c] || c)
+    .join('')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Chấm điểm câu trả lời dựa trên so khớp từ khóa.
+ * @param {string} userText - Văn bản nhận dạng từ giọng nói
+ * @param {string[]} tuKhoa - Mảng từ khóa cần khớp
+ * @returns {{ score: number, hit: string[], miss: string[] }}
+ */
+function scoreByKeywords(userText, tuKhoa) {
+  const normalizedUser = normalizeText(userText);
+  const hit  = [];
+  const miss = [];
+
+  tuKhoa.forEach(kw => {
+    const normalizedKw = normalizeText(kw);
+    if (normalizedUser.includes(normalizedKw)) {
+      hit.push(kw);
+    } else {
+      miss.push(kw);
+    }
+  });
+
+  const score = tuKhoa.length > 0
+    ? Math.round((hit.length / tuKhoa.length) * 100)
+    : 0;
+
+  return { score, hit, miss };
+}
+
+/**
+ * Chấm điểm và hiển thị kết quả sau khi người dùng trả lời.
+ * @param {string} recognizedText - Văn bản nhận dạng được
+ */
+function gradeAnswer(recognizedText) {
+  const q = appState.sessionQuestions[appState.currentIndex];
+  if (!q) return;
+
+  const { score, hit, miss } = scoreByKeywords(recognizedText, q.tuKhoa);
+
+  // Lưu kết quả vào phiên
+  appState.sessionResults[appState.currentIndex] = {
+    id: q.id,
+    score,
+    recognized: recognizedText,
+    hit, miss
+  };
+  updateQuestionScore(q.id, score);
+
+  // Hiển thị điểm
+  showScoreResult(score, hit, miss);
+  document.getElementById('btn-next').disabled = false;
+  stopTimer();
+}
+
+/** Hiển thị kết quả điểm cho câu hiện tại */
+function showScoreResult(score, hit, miss) {
+  const el   = document.getElementById('score-result');
+  const pctEl = document.getElementById('score-percent');
+  const fbEl  = document.getElementById('score-feedback');
+  const kwEl  = document.getElementById('score-keywords');
+
+  pctEl.textContent = score + '%';
+  el.className = 'score-result show ' + (score >= 80 ? 'pass' : score >= 50 ? 'mid' : 'fail');
+  fbEl.textContent =
+    score >= 80 ? '🏅 Xuất sắc! Bạn trả lời rất tốt.' :
+    score >= 50 ? '📖 Tạm ổn – Hãy xem lại đáp án mẫu.' :
+                  '⚠️ Cần học lại! Thiếu nhiều ý quan trọng.';
+
+  // Hiển thị từ khóa đã đúng / còn thiếu
+  let kwHtml = '';
+  if (hit.length > 0) {
+    kwHtml += '<span style="color:#2e7d32">✅ Đã có: </span>';
+    kwHtml += hit.map(k => `<span class="kw-hit">${k}</span>`).join(', ');
+  }
+  if (miss.length > 0) {
+    if (kwHtml) kwHtml += ' · ';
+    kwHtml += '<span style="color:var(--red-main)">❌ Còn thiếu: </span>';
+    kwHtml += miss.map(k => `<span class="kw-miss">${k}</span>`).join(', ');
+  }
+  kwEl.innerHTML = kwHtml;
+}
+
+/** Ẩn kết quả điểm */
+function hideScoreResult() {
+  document.getElementById('score-result').className = 'score-result';
+}
+
+// ============================================================
+// 10. ĐẶC ĐĂC FLASHCARD
+// ============================================================
+
+/** Lật/tắt flashcard */
+function flipFlashcard() {
+  appState.flashcardFlipped = !appState.flashcardFlipped;
+  document.getElementById('flashcard-inner').classList.toggle('flipped', appState.flashcardFlipped);
+}
+
+/** Đánh dấu flashcard là ĐÃ THUỘC */
+function fcMarkKnown() {
+  const q = appState.sessionQuestions[appState.currentIndex];
+  if (q) {
+    updateQuestionScore(q.id, 100);
+    appState.sessionResults[appState.currentIndex] = { id: q.id, score: 100, recognized: '(Flashcard: Đã thuộc)', hit: q.tuKhoa, miss: [] };
+  }
+  nextQuestion();
+}
+
+/** Đánh dấu flashcard là CHƯA THUỘC */
+function fcMarkUnknown() {
+  const q = appState.sessionQuestions[appState.currentIndex];
+  if (q) {
+    // Lưu điểm 0 nếu chưa có điểm nào
+    const existing = getQuestionScore(q.id);
+    if (existing === null) updateQuestionScore(q.id, 0);
+    appState.sessionResults[appState.currentIndex] = { id: q.id, score: existing || 0, recognized: '(Flashcard: Chưa thuộc)', hit: [], miss: q.tuKhoa };
+  }
+  nextQuestion();
+}
+
+// ============================================================
+// 11. ĐIỀU KHIỂN LUỒNG CÂU HỎI
+// ============================================================
+
+/** Bỏ qua câu hiện tại (không ghi điểm) */
+function skipQuestion() {
+  stopListening();
+  stopTTS();
+  stopTimer();
+  const q = appState.sessionQuestions[appState.currentIndex];
+  if (q) {
+    // Ghi điểm 0 cho câu bị bỏ qua, nhưng không ghi đè điểm cao hơn đã có
+    const existing = getQuestionScore(q.id);
+    if (existing === null) updateQuestionScore(q.id, 0);
+    appState.sessionResults[appState.currentIndex] = {
+      id: q.id, score: existing || 0, recognized: '(Bỏ qua)', hit: [], miss: []
+    };
+  }
+  nextQuestion();
+}
+
+/** Chuyển sang câu tiếp theo */
+function nextQuestion() {
+  stopListening();
+  stopTTS();
+  stopTimer();
+  appState.currentIndex++;
+  if (appState.currentIndex >= appState.sessionQuestions.length) {
+    showResults();
+  } else {
+    renderCurrentQuestion();
+  }
+}
+
+/** Hiển thị / ẩn đáp án mẫu */
+function toggleSampleAnswer() {
+  const q  = appState.sessionQuestions[appState.currentIndex];
+  const el = document.getElementById('sample-answer');
+  const btn = document.getElementById('btn-show-answer');
+  appState.isSampleShowing = !appState.isSampleShowing;
+  if (appState.isSampleShowing) {
+    el.textContent = q ? q.dapAn : '';
+    el.classList.add('show');
+    btn.textContent = '🙈 Ẩn đáp án mẫu';
+  } else {
+    el.classList.remove('show');
+    btn.textContent = '📖 Xem đáp án mẫu';
+  }
+}
+
+/** Ẩn đáp án mẫu */
+function hideSampleAnswer() {
+  appState.isSampleShowing = false;
+  document.getElementById('sample-answer').classList.remove('show');
+  document.getElementById('btn-show-answer').textContent = '📖 Xem đáp án mẫu';
+}
+
+// ============================================================
+// 12. ĐỒNG HỒ ĐẾM NGƯỢC
+// ============================================================
+
+/** Bật/tắt đồng hồ từ trang chủ */
+function toggleTimer() {
+  appState.timerEnabled = !appState.timerEnabled;
+  const box = document.getElementById('timer-toggle-box');
+  const lbl = document.getElementById('timer-toggle-lbl');
+  box.classList.toggle('on', appState.timerEnabled);
+  lbl.textContent = appState.timerEnabled ? 'Đồng hồ 30s: Bật' : 'Đồng hồ 30s: Tắt';
+}
+
+/** Khởi động đồng hồ */
+function startTimer() {
+  stopTimer();
+  appState.timerCountdown = appState.timerSeconds;
+  updateTimerDisplay();
+  appState.timerInterval = setInterval(() => {
+    appState.timerCountdown--;
+    updateTimerDisplay();
+    if (appState.timerCountdown <= 0) {
+      stopTimer();
+      // Hết giờ: tự động xử lý nếu chưa có câu trả lời
+      if (!appState.sessionResults[appState.currentIndex]) {
+        showToast('⏰ Hết giờ! Chuyển sang câu tiếp.');
+        skipQuestion();
+      }
+    }
+  }, 1000);
+}
+
+/** Cập nhật hiển thị đồng hồ */
+function updateTimerDisplay() {
+  const t = appState.timerCountdown;
+  const el   = document.getElementById('timer-display');
+  const bar  = document.getElementById('timer-bar');
+  el.textContent = t;
+  const pct = (t / appState.timerSeconds) * 100;
+  bar.style.width = pct + '%';
+  const isWarning = t <= 10;
+  el.classList.toggle('warning', isWarning);
+  bar.classList.toggle('warning', isWarning);
+}
+
+/** Tạm dừng đồng hồ (khi đang ghi âm) */
+function pauseTimer() {
+  if (appState.timerInterval) {
+    clearInterval(appState.timerInterval);
+    appState.timerInterval = null;
+  }
+}
+
+/** Tiếp tục đồng hồ */
+function resumeTimer() {
+  if (!appState.timerEnabled) return;
+  if (appState.timerCountdown > 0 && !appState.sessionResults[appState.currentIndex]) {
+    appState.timerInterval = setInterval(() => {
+      appState.timerCountdown--;
+      updateTimerDisplay();
+      if (appState.timerCountdown <= 0) {
+        stopTimer();
+      }
+    }, 1000);
+  }
+}
+
+/** Dừng đồng hồ */
+function stopTimer() {
+  if (appState.timerInterval) {
+    clearInterval(appState.timerInterval);
+    appState.timerInterval = null;
+  }
+}
+
+// ============================================================
+// 13. MÀN HÌNH KẾT QUẢ
+// ============================================================
+
+/** Hiển thị kết quả cuối phiên luyện tập */
+function showResults() {
+  stopTimer();
+  stopListening();
+  stopTTS();
+
+  // Tính điểm trung bình
+  const results = appState.sessionResults.filter(r => r !== undefined);
+  const avgScore = results.length > 0
+    ? Math.round(results.reduce((sum, r) => sum + r.score, 0) / results.length)
+    : 0;
+
+  // Xác định huy hiệu trình độ
+  const badgeEl    = document.getElementById('result-badge');
+  const iconEl     = document.getElementById('result-icon');
+  const titleEl    = document.getElementById('result-title');
+  const avgEl      = document.getElementById('result-avg');
+  const subEl      = document.getElementById('result-subtitle');
+
+  avgEl.textContent = avgScore + '%';
+
+  if (avgScore >= 80) {
+    badgeEl.className  = 'result-badge gold-badge';
+    iconEl.textContent  = '🏅';
+    titleEl.textContent = 'Thuộc bài vững!';
+    subEl.textContent   = 'Điểm trung bình từ 80% trở lên – Xuất sắc!';
+  } else if (avgScore >= 50) {
+    badgeEl.className  = 'result-badge blue-badge';
+    iconEl.textContent  = '📘';
+    titleEl.textContent = 'Tạm ổn – Nên xem thêm';
+    subEl.textContent   = 'Điểm trung bình từ 50%–79% – Còn có thể cải thiện.';
+  } else {
+    badgeEl.className  = 'result-badge red-badge';
+    iconEl.textContent  = '⚠️';
+    titleEl.textContent = 'Cần học lại từ đầu';
+    subEl.textContent   = 'Điểm trung bình dưới 50% – Hãy ôn lại kỹ hơn!';
+  }
+
+  // Hiển thị chi tiết từng câu
+  const detailEl = document.getElementById('result-detail');
+  let detailHtml = '';
+  appState.sessionQuestions.forEach((q, i) => {
+    const r = appState.sessionResults[i];
+    const s = r ? r.score : 0;
+    const color = s >= 80 ? '#2e7d32' : s >= 50 ? '#8b6900' : 'var(--red-dark)';
+    const bar   = s >= 80 ? '🟢' : s >= 50 ? '🟡' : '🔴';
+    detailHtml += `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #eee;">
+      <span style="font-size:1rem;">${bar}</span>
+      <div style="flex:1;font-size:0.82rem;color:var(--text-main);line-height:1.4;">
+        <strong>Câu ${q.id}:</strong> ${q.cau.slice(0, 60)}${q.cau.length > 60 ? '...' : ''}
+      </div>
+      <span style="font-weight:800;color:${color};min-width:40px;text-align:right;">${s}%</span>
+    </div>`;
+  });
+  detailEl.innerHTML = detailHtml || '<p style="color:var(--text-soft);font-size:0.88rem;">Chưa có kết quả.</p>';
+
+  // Danh sách câu yếu (dưới 50%)
+  const weakItems = appState.sessionQuestions.filter((q, i) => {
+    const r = appState.sessionResults[i];
+    return r && r.score < 50;
+  });
+  const weakCard = document.getElementById('weak-card');
+  const weakList = document.getElementById('weak-list');
+  if (weakItems.length > 0) {
+    weakCard.style.display = 'block';
+    weakList.innerHTML = weakItems.map((q, i) => {
+      const r = appState.sessionResults[appState.sessionQuestions.indexOf(q)];
+      return `<li class="weak-item" onclick="reviewWeakQuestion(${q.id})">
+        <span class="weak-score">${r ? r.score : 0}%</span>
+        <span class="weak-q"><strong>Câu ${q.id}:</strong> ${q.cau.slice(0, 70)}...</span>
+        <span>👆</span>
+      </li>`;
+    }).join('');
+  } else {
+    weakCard.style.display = 'none';
+  }
+
+  showScreen('result');
+  renderHomeStats();
+}
+
+/** Nhấn vào câu yếu để xem đáp án */
+function reviewWeakQuestion(id) {
+  const q = CHUONG_TRINH.find(x => x.id === id);
+  if (!q) return;
+  alert(`📖 Câu ${q.id}: ${q.cau}\n\n✅ Đáp án mẫu:\n${q.dapAn}`);
+}
+
+// ============================================================
+// 14. ĐIỀU HƯỚNG MÀN HÌNH
+// ============================================================
+
+/**
+ * Chuyển sang màn hình được chỉ định.
+ * @param {'home'|'practice'|'result'} screen
+ */
+function showScreen(screen) {
+  document.getElementById('screen-home').style.display     = screen === 'home'     ? 'block' : 'none';
+  document.getElementById('screen-practice').style.display = screen === 'practice' ? 'block' : 'none';
+  document.getElementById('screen-result').style.display   = screen === 'result'   ? 'block' : 'none';
+  window.scrollTo(0, 0);
+}
+
+/** Quay về trang chủ, dọn dẹp trạng thái */
+function goHome() {
+  stopListening();
+  stopTTS();
+  stopTimer();
+  renderHomeStats();
+  showScreen('home');
+}
+
+// ============================================================
+// 15. TOAST THÔNG BÁO
+// ============================================================
+
+let toastTimer = null;
+
+/** Hiển thị thông báo toast ngắn */
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ============================================================
+// 16. KHỞI TẠO ỨNG DỤNG
+// ============================================================
+
+/** Chạy khi trang được tải */
+function initApp() {
+  renderHomeStats();
+  // Tải giọng TTS (một số trình duyệt cần gọi getVoices trước)
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => {};
+  }
+  showScreen('home');
+}
+
+// Khởi động
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
