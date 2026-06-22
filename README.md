@@ -10,7 +10,7 @@
   ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
   ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
-  [👉 Xem Live Demo tại đây](https://<username>.github.io/<tên-repository>)
+  [👉 Xem Live Demo tại đây](https://ruhua2305.github.io/ly-thuyet-vovinam/)
 </div>
 
 ---
@@ -41,4 +41,4 @@ Dự án được viết hoàn toàn bằng HTML/CSS/JS thuần nên không cầ
 
 1. **Clone repository này về máy:**
    ```bash
-   git clone [https://github.com/](https://github.com/)<username>/<tên-repository>.git
+   git clone [https://github.com/ruhua2305/ly-thuyet-vovinam.git](https://github.com/ruhua2305/ly-thuyet-vovinam.git)
